@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BloomTraders — Pro Crypto Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --gold:#F5A623;--gold-dim:#B87A1A;--gold-glow:rgba(245,166,35,0.13);
@@ -499,9 +500,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <span style="font-size:18px;">💬</span>
       <div><div style="font-size:13px;font-weight:600;color:#00D97E;">WhatsApp</div><div style="font-size:11px;color:var(--dim);">03186350426</div></div>
     </a>
-    <a href="mailto:BLOOMTRADERS134@GMAIL.COM" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:9px;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='rgba(245,166,35,0.18)'" onmouseout="this.style.background='rgba(245,166,35,0.1)'">
+    <a href="/cdn-cgi/l/email-protection#b6f4faf9f9fbe2e4f7f2f3e4e5878582f6f1fbf7fffa98f5f9fb" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:9px;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='rgba(245,166,35,0.18)'" onmouseout="this.style.background='rgba(245,166,35,0.1)'">
       <span style="font-size:18px;">✉️</span>
-      <div><div style="font-size:13px;font-weight:600;color:var(--gold);">Email</div><div style="font-size:11px;color:var(--dim);">BLOOMTRADERS134@GMAIL.COM</div></div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--gold);">Email</div><div style="font-size:11px;color:var(--dim);"><span class="__cf_email__" data-cfemail="9bd9d7d4d4d6cfc9dadfdec9c8aaa8afdbdcd6dad2d7b5d8d4d6">[email&#160;protected]</span></div></div>
     </a>
   </div>
   <button onclick="document.getElementById('supportMenu').style.display=document.getElementById('supportMenu').style.display==='none'?'block':'none'" style="width:52px;height:52px;border-radius:50%;background:var(--gold);border:none;color:#000;font-size:22px;cursor:pointer;box-shadow:0 8px 24px rgba(245,166,35,0.4);transition:all .2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">🎧</button>
@@ -695,9 +696,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
     <a href="#">Terms</a>
     <a href="https://t.me/Allah_is_everywhere112" target="_blank">📲 Telegram Support</a>
     <a href="https://wa.me/923186350426" target="_blank">💬 WhatsApp</a>
-    <a href="mailto:BLOOMTRADERS134@GMAIL.COM">✉️ Email</a>
+    <a href="/cdn-cgi/l/email-protection#1456585b5b5940465550514647252720545359555d583a575b59">✉️ Email</a>
   </div>
-  <div class="footer-copy">© 2025 BloomTraders · BLOOMTRADERS134@GMAIL.COM</div>
+  <div class="footer-copy">© 2025 BloomTraders · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8bc9c7c4c4c6dfd9cacfced9d8bab8bfcbccc6cac2c7a5c8c4c6">[email&#160;protected]</a></div>
 </footer>
 </div><!-- end landingScreen -->
 
@@ -1169,10 +1170,24 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // =============================================
-// DATA & STATE
+// SUPABASE INIT
 // =============================================
+const SUPA_URL = 'https://aorrltfzhiasahpxbzzz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcnJsdGZ6aGlhc2FocHhienp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NTkwNDgsImV4cCI6MjA4OTIzNTA0OH0.bdvcl77-s1W1vpK610aoa0upefoYGu0Sl1qlPCWkdu8';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// Check if user already logged in
+supa.auth.getSession().then(({data:{session}})=>{
+  if(session){
+    currentUser = session.user;
+  }
+});
+supa.auth.onAuthStateChange((_,session)=>{
+  currentUser = session?.user || null;
+});
+let currentUser = null;
 const PAIRS = {
   'BTC/USDT': {price:67420,change:2.4,high:68120,low:65800,vol:'$38.2B',cap:'$1.33T'},
   'ETH/USDT': {price:3512,change:1.8,high:3590,low:3420,vol:'$18.4B',cap:'$421B'},
@@ -1300,8 +1315,39 @@ function authTab(tab){
   document.getElementById('authTitle').textContent=tab==='signup'?'Create account':'Welcome back';
   document.getElementById('authSub').textContent=tab==='signup'?'Start trading smarter today — free':'Sign in to your BloomTraders account';
 }
-function doSignup(){closeOverlay('authOverlay');enterDashboard();}
-function doLogin(){closeOverlay('authOverlay');enterDashboard();}
+async function doSignup(){
+  const name = document.getElementById('suName').value.trim();
+  const email = document.getElementById('suEmail').value.trim();
+  const pass = document.getElementById('suPass').value;
+  if(!name||!email||!pass){showToast('Sab fields fill karein','warn');return;}
+  if(pass.length<6){showToast('Password kam az kam 6 characters','warn');return;}
+  const btn = document.querySelector('#suForm .modal-btn');
+  btn.textContent='Creating...';btn.disabled=true;
+  const {data,error} = await supa.auth.signUp({
+    email, password:pass,
+    options:{data:{full_name:name}}
+  });
+  btn.textContent='Create Account — Free';btn.disabled=false;
+  if(error){showToast('❌ '+error.message,'warn');return;}
+  showToast('✅ Account bana! Email check karein verification ke liye','success');
+  closeOverlay('authOverlay');
+  enterDashboard();
+}
+
+async function doLogin(){
+  const email = document.getElementById('liEmail').value.trim();
+  const pass = document.getElementById('liPass').value;
+  if(!email||!pass){showToast('Email aur password darj karein','warn');return;}
+  const btn = document.querySelector('#liForm .modal-btn');
+  btn.textContent='Signing in...';btn.disabled=true;
+  const {data,error} = await supa.auth.signInWithPassword({email,password:pass});
+  btn.textContent='Sign In';btn.disabled=false;
+  if(error){showToast('❌ '+error.message,'warn');return;}
+  currentUser = data.user;
+  showToast('✅ Welcome back!','success');
+  closeOverlay('authOverlay');
+  enterDashboard();
+}
 
 // =============================================
 // PAYMENT MODAL
@@ -1340,16 +1386,33 @@ function handleUpload(inp){
   const fn=document.getElementById('uploadFN');
   fn.textContent='✓ '+f.name;fn.style.display='block';
 }
-function submitPay(){
+async function submitPay(){
   const name=document.getElementById('payerName').value.trim();
   const email=document.getElementById('payerEmail').value.trim();
   const hasFile=document.getElementById('uploadArea').classList.contains('has-file');
   if(!name){showToast('Please enter your name','warn');return;}
   if(!email||!email.includes('@')){showToast('Please enter valid email','warn');return;}
   if(!hasFile){showToast('Please upload payment receipt','warn');return;}
-  const sub={id:submissions.length+1,name,email,plan:curPayPlan,method:document.querySelector('.pm-btn.sel')?.querySelector('.pm-name')?.textContent||'crypto',amount:curPayPlan==='Pro'?'PKR '+curPayPKR.toLocaleString():'PKR '+curPayPKR.toLocaleString(),date:new Date().toLocaleString('sv').slice(0,16),status:'pending',phone:document.getElementById('payerPhone').value||'—'};
-  submissions.push(sub);
-  localStorage.setItem('bt_subs',JSON.stringify(submissions));
+  const btn=document.querySelector('#payReceiptSec .modal-btn');
+  btn.textContent='Submitting...';btn.disabled=true;
+  const methodEl=document.querySelector('.pm-btn.sel .pm-name');
+  const sub={
+    name, email,
+    phone:document.getElementById('payerPhone').value||'—',
+    plan:curPayPlan,
+    method:methodEl?methodEl.textContent:'crypto',
+    amount:curPayPlan==='Pro'?'PKR '+curPayPKR.toLocaleString():'PKR '+curPayPKR.toLocaleString(),
+    status:'pending',
+    user_id: currentUser?.id || null
+  };
+  const {error} = await supa.from('submissions').insert([sub]);
+  btn.textContent='Submit Receipt for Verification';btn.disabled=false;
+  if(error){
+    // fallback to localStorage if table not created yet
+    const fallback=JSON.parse(localStorage.getItem('bt_subs')||'[]');
+    fallback.push({...sub,id:fallback.length+1,date:new Date().toLocaleString('sv').slice(0,16)});
+    localStorage.setItem('bt_subs',JSON.stringify(fallback));
+  }
   document.getElementById('payStep1').style.display='none';
   document.getElementById('paySuccess').classList.add('vis');
 }
@@ -1702,12 +1765,17 @@ function aFilter(f,btn){
   document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');renderAdmin();
 }
-function renderAdmin(){
+async function renderAdmin(){
   const q=(document.getElementById('aSrch')?.value||'').toLowerCase();
+  // Try Supabase first
+  let {data:remoteData, error} = await supa.from('submissions').select('*').order('id',{ascending:false});
+  if(!error && remoteData && remoteData.length>0){
+    submissions = remoteData.map(s=>({...s,date:s.created_at?s.created_at.slice(0,16):s.date||'—'}));
+  }
   const filtered=submissions.filter(s=>(aFilterVal==='all'||s.status===aFilterVal)&&(!q||s.name.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)));
   const tbody=document.getElementById('adminTbody');
   const empty=document.getElementById('adminEmpty');
-  const mIcons={jazzcash:'📱',bank:'🏦',crypto:'₿',JazzCash:'📱','Bank Transfer':'🏦',Crypto:'₿'};
+  const mIcons={jazzcash:'📱',bank:'🏦',crypto:'₿',JazzCash:'📱','Bank Transfer':'🏦',Crypto:'₿',Meezan:'🏦',Easypaisa:'💚',SadaPay:'🟣',easypaisa:'💚',sadapay:'🟣'};
   if(filtered.length===0){tbody.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
   tbody.innerHTML=filtered.map(s=>`
@@ -1715,11 +1783,11 @@ function renderAdmin(){
       <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--dim)">#${s.id}</td>
       <td style="font-weight:500">${s.name}</td>
       <td style="color:var(--dim)">${s.email}</td>
-      <td><span class="badge ${s.plan.toLowerCase()}">${s.plan}</span></td>
+      <td><span class="badge ${(s.plan||'').toLowerCase()}">${s.plan}</span></td>
       <td>${mIcons[s.method]||'💳'} ${s.method}</td>
       <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">${s.amount}</td>
-      <td style="font-size:11px;color:var(--dim);font-family:'Space Mono',monospace">${s.date}</td>
-      <td><span class="badge ${s.status}">${s.status.charAt(0).toUpperCase()+s.status.slice(1)}</span></td>
+      <td style="font-size:11px;color:var(--dim);font-family:'Space Mono',monospace">${s.date||'—'}</td>
+      <td><span class="badge ${s.status}">${(s.status||'').charAt(0).toUpperCase()+(s.status||'').slice(1)}</span></td>
       <td><div class="action-btns">
         <button class="abtn view" onclick="viewSub(${s.id})">View</button>
         ${s.status!=='approved'?`<button class="abtn approve" onclick="setStatus(${s.id},'approved')">Approve</button>`:''}
@@ -1734,9 +1802,12 @@ function updateAdminStats(){
   document.getElementById('aSApp').textContent=submissions.filter(s=>s.status==='approved').length;
   document.getElementById('aSRej').textContent=submissions.filter(s=>s.status==='rejected').length;
 }
-function setStatus(id,st){
+async function setStatus(id,st){
   const s=submissions.find(x=>x.id===id);if(!s)return;
-  s.status=st;localStorage.setItem('bt_subs',JSON.stringify(submissions));
+  s.status=st;
+  // Update in Supabase
+  await supa.from('submissions').update({status:st}).eq('id',id);
+  localStorage.setItem('bt_subs',JSON.stringify(submissions));
   renderAdmin();showToast('Status updated: '+st,'success');
 }
 function viewSub(id){
@@ -1774,19 +1845,4 @@ function saveCreds(){
 
 // =============================================
 // SMOOTH SCROLL (landing)
-// =============================================
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    const t=document.querySelector(a.getAttribute('href'));
-    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
-  });
-});
-
-// =============================================
-// INIT
-// =============================================
-initTicker();
-initLandingChart();
-</script>
-</body>
-</html>
+// ==========
