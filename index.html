@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BloomTraders — Pro Crypto Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --gold:#F5A623;--gold-dim:#B87A1A;--gold-glow:rgba(245,166,35,0.13);
@@ -526,8 +526,8 @@ tr:hover td{background:rgba(255,255,255,.02);}
     <li><a href="#" onclick="showAdmin();return false;">Admin</a></li>
   </ul>
   <div class="nav-cta">
-    <button class="btn-ghost" onclick="enterDashboard()">Sign In</button>
-    <button class="btn-gold" onclick="enterDashboard()">Start Free</button>
+    <button class="btn-ghost" onclick="openAuthModal('login')">Sign In</button>
+    <button class="btn-gold" onclick="openAuthModal('signup')">Start Free</button>
   </div>
 </nav>
 
@@ -542,7 +542,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   <h1>Trade smarter with<br><em>professional signals</em></h1>
   <p>Institutional-grade crypto analytics, real-time liquidation heatmaps, AI-powered signals, and multi-exchange data — all in one elite dashboard.</p>
   <div class="hero-btns">
-    <button class="btn-lg gold" onclick="enterDashboard()">Start free →</button>
+    <button class="btn-lg gold" onclick="openAuthModal('signup')">Start free →</button>
     <a class="btn-lg outline" href="#features">See features</a>
   </div>
   <div class="hero-stats">
@@ -561,6 +561,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="mac-dot" style="background:#FEBC2E"></div>
       <div class="mac-dot" style="background:#28C840"></div>
       <div class="preview-url">app.bloomtraders.io/dashboard</div>
+      <button style="margin-left:auto;background:var(--gold);border:none;color:#000;padding:4px 14px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="enterDashboard()">Live Demo →</button>
     </div>
     <div class="preview-inner">
       <div class="preview-sb">
@@ -632,7 +633,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <li><span class="cx">✗</span> <span style="opacity:.4">Liquidation heatmap</span></li>
         <li><span class="cx">✗</span> <span style="opacity:.4">Dynamic Island alerts</span></li>
       </ul>
-      <button class="plan-btn outline" onclick="enterDashboard()">Get started free</button>
+      <button class="plan-btn outline" onclick="openAuthModal('signup')">Get started free</button>
     </div>
     <div class="plan featured">
       <div class="plan-badge">Most Popular</div>
@@ -684,7 +685,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   <div class="cta-box">
     <h2>Ready to trade like a pro?</h2>
     <p>Join thousands of traders. Start free, no credit card required.</p>
-    <button class="btn-lg gold" onclick="enterDashboard()">Create free account →</button>
+    <button class="btn-lg gold" onclick="openAuthModal('signup')">Create free account →</button>
   </div>
 </section>
 
@@ -706,13 +707,28 @@ tr:hover td{background:rgba(255,255,255,.02);}
      AUTH MODAL
      ============================================= -->
 <div class="overlay" id="authOverlay" onclick="closeBg(event,'authOverlay')">
-  <div class="modal" style="text-align:center;">
+  <div class="modal">
     <button class="modal-x" onclick="closeOverlay('authOverlay')">✕</button>
-    <div style="font-size:32px;margin-bottom:12px;">🚀</div>
-    <h3 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px;">BloomTraders</h3>
-    <div class="modal-sub" style="margin-bottom:28px;">Professional crypto trading platform</div>
-    <button class="modal-btn" onclick="closeOverlay('authOverlay');enterDashboard();" style="margin-bottom:12px;">Enter Dashboard →</button>
-    <div style="font-size:12px;color:var(--dim);">Full access — no signup required</div>
+    <h3 id="authTitle">Get started</h3>
+    <div class="modal-sub" id="authSub">Start trading smarter today</div>
+    <div class="tabs">
+      <button class="tab active" id="tab-su" onclick="authTab('signup')">Sign Up</button>
+      <button class="tab" id="tab-li" onclick="authTab('login')">Sign In</button>
+    </div>
+    <div id="suForm">
+      <div class="fg"><label>Full Name</label><input type="text" id="suName" placeholder="Your name"></div>
+      <div class="fg"><label>Email</label><input type="email" id="suEmail" placeholder="you@example.com"></div>
+      <div class="fg"><label>Password</label><input type="password" id="suPass" placeholder="Min 8 characters"></div>
+      <button class="modal-btn" onclick="doSignup()">Create Account — Free</button>
+      <div class="modal-ft">Already have account? <a href="#" onclick="authTab('login');return false;">Sign in</a></div>
+    </div>
+    <div id="liForm" style="display:none">
+      <div class="fg"><label>Email</label><input type="email" id="liEmail" placeholder="you@example.com"></div>
+      <div class="fg"><label>Password</label><input type="password" id="liPass" placeholder="Your password"></div>
+      <button class="modal-btn" onclick="doLogin()">Sign In</button>
+      <div style="margin-top:10px;text-align:center;"><button style="background:var(--bg3);border:1px solid var(--bs);color:var(--text);padding:9px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;width:100%;font-weight:500;transition:all .2s;" onclick="enterDashboard()">🚀 Quick Demo (skip login)</button></div>
+      <div class="modal-ft">No account? <a href="#" onclick="authTab('signup');return false;">Sign up free</a></div>
+    </div>
   </div>
 </div>
 
@@ -816,27 +832,25 @@ tr:hover td{background:rgba(255,255,255,.02);}
   <!-- Top Bar -->
   <div class="dash-top">
     <div class="dash-logo">BT</div>
-    <div style="position:relative;">
-      <input id="pairSearchInput" type="text" value="BTC/USDT" placeholder="Search pair..." autocomplete="off"
-        style="background:var(--bg3);border:1px solid var(--bs);border-radius:7px;padding:6px 12px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;outline:none;width:140px;cursor:pointer;"
-        oninput="filterPairDropdown(this.value)" onfocus="showPairDrop()" onkeydown="pairKeyNav(event)">
-      <div id="pairDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;width:280px;max-height:320px;overflow-y:auto;z-index:999;box-shadow:0 20px 60px rgba(0,0,0,.6);">
-        <div style="padding:8px 12px;border-bottom:1px solid var(--bs);display:flex;gap:8px;">
-          <button onclick="setPairTab('spot')" id="ptab-spot" style="flex:1;padding:5px;border-radius:5px;border:none;background:var(--gold);color:#000;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Spot</button>
-          <button onclick="setPairTab('futures')" id="ptab-futures" style="flex:1;padding:5px;border-radius:5px;border:1px solid var(--bs);background:none;color:var(--dim);font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Futures</button>
-        </div>
-        <div id="pairList" style="padding:4px;"></div>
-      </div>
-    </div>
-    <div class="dash-price-big" id="topbarPrice">Loading...</div>
-    <div class="dash-change up" id="topbarChange">—</div>
+    <select class="dash-pair-select" id="pairSelect" onchange="changePair()">
+      <option>BTC/USDT</option>
+      <option>ETH/USDT</option>
+      <option>SOL/USDT</option>
+      <option>BNB/USDT</option>
+      <option>XRP/USDT</option>
+      <option>ADA/USDT</option>
+      <option>AVAX/USDT</option>
+      <option>DOGE/USDT</option>
+    </select>
+    <div class="dash-price-big" id="topbarPrice">$67,420</div>
+    <div class="dash-change up" id="topbarChange">+2.4%</div>
     <div class="dash-spacer"></div>
 
     <!-- Dynamic Island -->
     <div class="di-container">
       <div class="di-pill signal-buy" id="diPill" onclick="toggleDI()">
         <div class="di-dot"></div>
-        <span id="diText">Loading signals...</span>
+        <span id="diText">BUY BTC · RSI oversold</span>
       </div>
       <div class="di-dropdown" id="diDropdown">
         <div style="font-size:11px;color:var(--dim);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-family:'Space Mono',monospace;">Live Signals</div>
@@ -854,8 +868,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="sb-section">
         <div class="sb-label">Main</div>
         <div class="sb-item active" onclick="switchView('overview',this)"><span class="sb-icon">📊</span> Overview</div>
-        <div class="sb-item" onclick="switchView('signals',this)"><span class="sb-icon">⚡</span> Signals <span class="sb-badge" id="sigBadge">0</span></div>
-        <div class="sb-item" onclick="switchView('coins',this)"><span class="sb-icon">🪙</span> All Coins</div>
+        <div class="sb-item" onclick="switchView('signals',this)"><span class="sb-icon">⚡</span> Signals <span class="sb-badge" id="sigBadge">5</span></div>
         <div class="sb-item" onclick="switchView('heatmap',this)"><span class="sb-icon">🔥</span> Heatmap</div>
         <div class="sb-item" onclick="switchView('ta',this)"><span class="sb-icon">📈</span> Analysis</div>
         <div class="sb-item" onclick="switchView('news',this)"><span class="sb-icon">📰</span> News</div>
@@ -865,7 +878,11 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="sb-item" onclick="switchView('alerts',this)"><span class="sb-icon">🔔</span> Alerts</div>
         <div class="sb-item" onclick="switchView('settings',this)"><span class="sb-icon">⚙️</span> Settings</div>
       </div>
-    </div><!-- end sidebar -->
+      <div style="margin-top:auto;padding:10px;background:var(--gold-glow);border:1px solid var(--border);border-radius:8px;text-align:center;">
+        <div style="font-size:10px;color:var(--gold);margin-bottom:5px;font-weight:700;">FREE PLAN</div>
+        <button style="width:100%;background:var(--gold);border:none;color:#000;padding:7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="openPayModal('Pro','$29 / PKR 8,100',29,8100)">Upgrade Pro</button>
+      </div>
+    </div>
 
     <!-- Main Content -->
     <div class="dash-main" id="dashMain">
@@ -948,53 +965,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
             <div class="live-badge"><div class="live-dot"></div>Live</div>
           </div>
           <div class="signals-list" id="allSignalsList" style="max-height:none;"></div>
-        </div>
-      </div>
-
-      <!-- ---- COINS VIEW ---- -->
-      <div class="dash-view" id="view-coins">
-        <div class="signals-panel" style="padding:18px;">
-          <div class="panel-header" style="margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-            <div class="panel-title">🪙 All Binance Coins</div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-              <button onclick="setCoinsTab('spot')" id="ctab-spot" style="padding:5px 14px;border-radius:6px;border:none;background:var(--gold);color:#000;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Spot</button>
-              <button onclick="setCoinsTab('futures')" id="ctab-futures" style="padding:5px 14px;border-radius:6px;border:1px solid var(--bs);background:none;color:var(--dim);font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Futures</button>
-              <input id="coinsSearch" type="text" placeholder="Search coin..." oninput="renderCoinsTable()"
-                style="background:var(--bg3);border:1px solid var(--bs);border-radius:7px;padding:6px 12px;color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;width:160px;">
-              <select id="coinsSortBy" onchange="renderCoinsTable()" style="background:var(--bg3);border:1px solid var(--bs);border-radius:7px;padding:6px 10px;color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;">
-                <option value="vol">Volume ↓</option>
-                <option value="change">Change ↓</option>
-                <option value="price">Price ↓</option>
-                <option value="name">Name ↑</option>
-              </select>
-              <span id="coinCount" style="font-size:11px;color:var(--dim);font-family:'Space Mono',monospace;"></span>
-            </div>
-            <div class="live-badge"><div class="live-dot"></div>Binance Live</div>
-          </div>
-          <div style="overflow-x:auto;">
-            <table style="width:100%;border-collapse:collapse;font-size:12px;">
-              <thead>
-                <tr style="background:var(--bg3);">
-                  <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">#</th>
-                  <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">Pair</th>
-                  <th style="padding:9px 12px;text-align:right;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">Price</th>
-                  <th style="padding:9px 12px;text-align:right;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">24h %</th>
-                  <th style="padding:9px 12px;text-align:right;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">Volume</th>
-                  <th style="padding:9px 12px;text-align:right;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">High</th>
-                  <th style="padding:9px 12px;text-align:right;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">Low</th>
-                  <th style="padding:9px 12px;text-align:center;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">Signal</th>
-                  <th style="padding:9px 12px;text-align:center;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bs);">Chart</th>
-                </tr>
-              </thead>
-              <tbody id="coinsTableBody"></tbody>
-            </table>
-            <div id="coinsLoading" style="text-align:center;padding:40px;color:var(--dim);font-size:13px;">
-              <div style="font-size:24px;margin-bottom:10px;">⏳</div>Loading Binance data...
-            </div>
-            <div id="coinsLoadMore" style="display:none;text-align:center;padding:16px;">
-              <button onclick="loadMoreCoins()" style="background:var(--bg3);border:1px solid var(--bs);color:var(--text);padding:9px 24px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all .2s;">Load More</button>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1099,7 +1069,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
               <div class="fg"><label>Full Name</label><input type="text" value="Demo User"></div>
               <div class="fg"><label>Email</label><input type="email" value="demo@bloomtraders.io"></div>
             </div>
-            <div class="fg"><label>Current Plan</label><input type="text" value="Pro (Full Access)" disabled style="opacity:.8;cursor:not-allowed;color:var(--gold);"></div>
+            <div class="fg"><label>Current Plan</label><input type="text" value="Starter (Free)" disabled style="opacity:.6;cursor:not-allowed;"></div>
             <button class="settings-save">Save Profile</button>
             <button class="settings-save" style="margin-left:10px;background:none;border:1px solid var(--border);color:var(--gold);" onclick="openPayModal('Pro','$29 / PKR 8,100',29,8100)">Upgrade to Pro</button>
           </div>
@@ -1202,457 +1172,104 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // =============================================
-// SUPABASE INIT — runs after page load
+// SUPABASE INIT
 // =============================================
 const SUPA_URL = 'https://aorrltfzhiasahpxbzzz.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcnJsdGZ6aGlhc2FocHhienp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NTkwNDgsImV4cCI6MjA4OTIzNTA0OH0.bdvcl77-s1W1vpK610aoa0upefoYGu0Sl1qlPCWkdu8';
 let supa = null;
 let currentUser = null;
-
-function initSupabase(){
-  try {
-    if(typeof supabase !== 'undefined'){
-      supa = supabase.createClient(SUPA_URL, SUPA_KEY);
-      supa.auth.getSession().then(({data:{session}})=>{ if(session) currentUser=session.user; });
-      supa.auth.onAuthStateChange((_,session)=>{ currentUser=session?.user||null; });
-      console.log('✅ Supabase connected');
-    } else {
-      console.warn('Supabase library not loaded, running offline');
-    }
-  } catch(e) {
-    console.warn('Supabase init error:', e);
-  }
-}
-// =============================================
-// BINANCE API — ALL COINS (Spot + Futures)
-// =============================================
-let spotCoins = [];
-let futuresCoins = [];
-let currentCoinsTab = 'spot';
-let coinsPage = 0;
-const COINS_PER_PAGE = 100;
-let pairTab = 'spot';
-let allPairData = {};
-
-async function fetchBinanceSpot(){
-  try{
-    const res = await fetch('https://api.binance.com/api/v3/ticker/24hr');
-    const data = await res.json();
-    spotCoins = data
-      .filter(c => c.symbol.endsWith('USDT') && parseFloat(c.lastPrice) > 0)
-      .map(c => ({
-        symbol: c.symbol,
-        pair: c.symbol.replace('USDT','/USDT'),
-        price: parseFloat(c.lastPrice),
-        change: parseFloat(c.priceChangePercent),
-        vol: parseFloat(c.quoteVolume),
-        high: parseFloat(c.highPrice),
-        low: parseFloat(c.lowPrice),
-        type: 'spot'
-      }));
-    // Build lookup
-    spotCoins.forEach(c=>{ allPairData[c.symbol]=c; });
-    console.log('✅ Binance Spot:', spotCoins.length, 'pairs');
-    // Update pair dropdown
-    if(currentCoinsTab==='spot') renderCoinsTable();
-    updatePairDropdown();
-    // Update ticker with real binance data
-    initTicker();
-  } catch(e){ console.warn('Binance Spot fetch failed:', e.message); }
-}
-
-async function fetchBinanceFutures(){
-  try{
-    const res = await fetch('https://fapi.binance.com/fapi/v1/ticker/24hr');
-    const data = await res.json();
-    futuresCoins = data
-      .filter(c => c.symbol.endsWith('USDT') && parseFloat(c.lastPrice) > 0)
-      .map(c => ({
-        symbol: c.symbol,
-        pair: c.symbol.replace('USDT','/USDT'),
-        price: parseFloat(c.lastPrice),
-        change: parseFloat(c.priceChangePercent),
-        vol: parseFloat(c.quoteVolume),
-        high: parseFloat(c.highPrice),
-        low: parseFloat(c.lowPrice),
-        type: 'futures'
-      }));
-    console.log('✅ Binance Futures:', futuresCoins.length, 'pairs');
-    if(currentCoinsTab==='futures') renderCoinsTable();
-  } catch(e){ console.warn('Binance Futures fetch failed:', e.message); }
-}
-
-function getActiveCoins(){
-  return currentCoinsTab==='spot' ? spotCoins : futuresCoins;
-}
-
-function setCoinsTab(tab){
-  currentCoinsTab=tab;
-  coinsPage=0;
-  document.getElementById('ctab-spot').style.background=tab==='spot'?'var(--gold)':'none';
-  document.getElementById('ctab-spot').style.color=tab==='spot'?'#000':'var(--dim)';
-  document.getElementById('ctab-spot').style.border=tab==='spot'?'none':'1px solid var(--bs)';
-  document.getElementById('ctab-futures').style.background=tab==='futures'?'var(--gold)':'none';
-  document.getElementById('ctab-futures').style.color=tab==='futures'?'#000':'var(--dim)';
-  document.getElementById('ctab-futures').style.border=tab==='futures'?'none':'1px solid var(--bs)';
-  renderCoinsTable();
-}
-
-function setPairTab(tab){
-  pairTab=tab;
-  document.getElementById('ptab-spot').style.background=tab==='spot'?'var(--gold)':'none';
-  document.getElementById('ptab-spot').style.color=tab==='spot'?'#000':'var(--dim)';
-  document.getElementById('ptab-spot').style.border=tab==='spot'?'none':'1px solid var(--bs)';
-  document.getElementById('ptab-futures').style.background=tab==='futures'?'var(--gold)':'none';
-  document.getElementById('ptab-futures').style.color=tab==='futures'?'#000':'var(--dim)';
-  document.getElementById('ptab-futures').style.border=tab==='futures'?'none':'1px solid var(--bs)';
-  filterPairDropdown(document.getElementById('pairSearchInput').value);
-}
-
-function updatePairDropdown(){
-  filterPairDropdown(document.getElementById('pairSearchInput')?.value||'');
-}
-
-function filterPairDropdown(q){
-  const list = document.getElementById('pairList');
-  if(!list) return;
-  const coins = pairTab==='spot' ? spotCoins : futuresCoins;
-  const filtered = coins
-    .filter(c => !q || c.pair.toLowerCase().includes(q.toLowerCase()))
-    .slice(0, 80);
-  list.innerHTML = filtered.map(c=>`
-    <div onclick="selectPairFromDrop('${c.pair}')" style="display:flex;justify-content:space-between;align-items:center;padding:7px 12px;cursor:pointer;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='none'">
-      <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;">${c.pair}</span>
-      <span style="display:flex;gap:10px;align-items:center;">
-        <span style="font-size:11px;color:var(--dim);">${fmtPrice(c.price)}</span>
-        <span style="font-size:11px;font-weight:600;color:${c.change>=0?'var(--green)':'var(--red)'};">${c.change>=0?'+':''}${c.change.toFixed(2)}%</span>
-      </span>
-    </div>`).join('') || '<div style="padding:16px;text-align:center;color:var(--dim);font-size:12px;">Loading...</div>';
-}
-
-function showPairDrop(){
-  const d=document.getElementById('pairDropdown');
-  d.style.display='block';
-  filterPairDropdown(document.getElementById('pairSearchInput').value);
-  setTimeout(()=>document.addEventListener('click',hidePairDrop,{once:true}),100);
-}
-function hidePairDrop(e){
-  if(!e.target.closest('#pairSearchInput')&&!e.target.closest('#pairDropdown')){
-    document.getElementById('pairDropdown').style.display='none';
-  }
-}
-function pairKeyNav(e){
-  if(e.key==='Escape') document.getElementById('pairDropdown').style.display='none';
-  if(e.key==='Enter'){
-    const q=document.getElementById('pairSearchInput').value.toUpperCase();
-    const found=(pairTab==='spot'?spotCoins:futuresCoins).find(c=>c.pair===q+'USDT'.replace('USDTUSDT','USDT')||c.pair===q);
-    if(found) selectPairFromDrop(found.pair);
-  }
-}
-
-function selectPairFromDrop(pair){
-  document.getElementById('pairDropdown').style.display='none';
-  document.getElementById('pairSearchInput').value=pair;
-  // Update current pair
-  currentPair=pair;
-  const sym=pair.replace('/','');
-  const d=allPairData[sym];
-  if(d){
-    PAIRS[pair]=PAIRS[pair]||{};
-    PAIRS[pair].price=d.price;
-    PAIRS[pair].change=d.change;
-    PAIRS[pair].high=d.high;
-    PAIRS[pair].low=d.low;
-    PAIRS[pair].vol=fmtLarge(d.vol);
-    PAIRS[pair].cap='—';
-    livePrice=d.price;
-  }
-  generatePriceData();
-  updateTopbar();
-  renderOrderBook();
-  drawChart('priceChart');
-  document.getElementById('chartTitle').textContent=pair+' — Price Chart';
-  document.getElementById('taTitle').textContent=pair;
-  // Try CoinGecko chart for major coins
-  const cgId=CG_IDS[pair];
-  if(cgId) fetchChartData(cgId,1);
-}
-
-function renderCoinsTable(){
-  const coins=getActiveCoins();
-  const q=(document.getElementById('coinsSearch')?.value||'').toLowerCase();
-  const sort=document.getElementById('coinsSortBy')?.value||'vol';
-  const loading=document.getElementById('coinsLoading');
-  const tbody=document.getElementById('coinsTableBody');
-  const loadMore=document.getElementById('coinsLoadMore');
-  if(!tbody)return;
-
-  if(coins.length===0){
-    if(loading)loading.style.display='block';
-    tbody.innerHTML='';
-    return;
-  }
-  if(loading)loading.style.display='none';
-
-  let filtered=coins.filter(c=>!q||c.pair.toLowerCase().includes(q));
-  // Sort
-  if(sort==='vol') filtered.sort((a,b)=>b.vol-a.vol);
-  else if(sort==='change') filtered.sort((a,b)=>b.change-a.change);
-  else if(sort==='price') filtered.sort((a,b)=>b.price-a.price);
-  else filtered.sort((a,b)=>a.pair.localeCompare(b.pair));
-
-  document.getElementById('coinCount').textContent=filtered.length+' pairs';
-
-  const end=Math.min((coinsPage+1)*COINS_PER_PAGE, filtered.length);
-  const show=filtered.slice(0, end);
-
-  tbody.innerHTML=show.map((c,i)=>{
-    const sig=calcSignal(c.change,c.vol);
-    const mini=generateMiniSparkline(c.change);
-    return`<tr style="border-bottom:1px solid var(--bs);cursor:pointer;" onclick="selectPairFromDrop('${c.pair}')" onmouseover="this.style.background='rgba(255,255,255,.025)'" onmouseout="this.style.background='none'">
-      <td style="padding:8px 12px;color:var(--dim);font-family:'Space Mono',monospace;font-size:10px;">${i+1}</td>
-      <td style="padding:8px 12px;font-weight:700;font-family:'Space Mono',monospace;font-size:12px;">${c.pair}</td>
-      <td style="padding:8px 12px;text-align:right;font-family:'Space Mono',monospace;font-size:12px;">${fmtPrice(c.price)}</td>
-      <td style="padding:8px 12px;text-align:right;font-size:12px;font-weight:600;color:${c.change>=0?'var(--green)':'var(--red)'};">${c.change>=0?'+':''}${c.change.toFixed(2)}%</td>
-      <td style="padding:8px 12px;text-align:right;font-size:11px;color:var(--dim);">${fmtLarge(c.vol)}</td>
-      <td style="padding:8px 12px;text-align:right;font-size:11px;color:var(--green);">${fmtPrice(c.high)}</td>
-      <td style="padding:8px 12px;text-align:right;font-size:11px;color:var(--red);">${fmtPrice(c.low)}</td>
-      <td style="padding:8px 12px;text-align:center;"><span class="sig-type ${sig.type}" style="padding:2px 8px;">${sig.type.toUpperCase()}</span></td>
-      <td style="padding:8px 12px;text-align:center;">${mini}</td>
-    </tr>`;
-  }).join('');
-
-  if(loadMore) loadMore.style.display=end<filtered.length?'block':'none';
-}
-
-function loadMoreCoins(){ coinsPage++; renderCoinsTable(); }
-
-function generateMiniSparkline(change){
-  const w=60,h=24;
-  const points=[];
-  let v=12;
-  for(let i=0;i<10;i++){v+=change>0?(Math.random()*2-0.6):(Math.random()*2-1.4);v=Math.max(2,Math.min(22,v));points.push(v);}
-  const pts=points.map((p,i)=>`${i*(w/9)},${p}`).join(' ');
-  const col=change>=0?'#00D97E':'#FF4757';
-  return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-}
-const CG_IDS = {
-  'BTC/USDT':'bitcoin','ETH/USDT':'ethereum','SOL/USDT':'solana',
-  'BNB/USDT':'binancecoin','XRP/USDT':'ripple','ADA/USDT':'cardano',
-  'AVAX/USDT':'avalanche-2','DOGE/USDT':'dogecoin'
+try {
+  supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+  supa.auth.getSession().then(({data:{session}})=>{ if(session) currentUser=session.user; });
+  supa.auth.onAuthStateChange((_,session)=>{ currentUser=session?.user||null; });
+} catch(e) { console.warn('Supabase init failed, running in offline mode', e); }
+const PAIRS = {
+  'BTC/USDT': {price:67420,change:2.4,high:68120,low:65800,vol:'$38.2B',cap:'$1.33T'},
+  'ETH/USDT': {price:3512,change:1.8,high:3590,low:3420,vol:'$18.4B',cap:'$421B'},
+  'SOL/USDT': {price:142.30,change:-0.9,high:148,low:140,vol:'$4.1B',cap:'$62B'},
+  'BNB/USDT': {price:412,change:0.5,high:418,low:408,vol:'$1.2B',cap:'$63B'},
+  'XRP/USDT': {price:0.582,change:-1.2,high:0.61,low:0.57,vol:'$2.8B',cap:'$33B'},
+  'ADA/USDT': {price:0.487,change:3.1,high:0.501,low:0.470,vol:'$820M',cap:'$17B'},
+  'AVAX/USDT': {price:34.20,change:-0.4,high:35.8,low:33.4,vol:'$640M',cap:'$14B'},
+  'DOGE/USDT': {price:0.132,change:5.2,high:0.140,low:0.125,vol:'$1.9B',cap:'$19B'}
 };
-const CG_SYMBOLS = ['bitcoin','ethereum','solana','binancecoin','ripple','cardano','avalanche-2','dogecoin','polkadot','matic-network','litecoin','chainlink'];
 
-let PAIRS = {
-  'BTC/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'},
-  'ETH/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'},
-  'SOL/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'},
-  'BNB/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'},
-  'XRP/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'},
-  'ADA/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'},
-  'AVAX/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'},
-  'DOGE/USDT':{price:0,change:0,high:0,low:0,vol:'—',cap:'—'}
-};
-let liveMarketData = {};
-let SIGNALS_DATA = [];
-let MOVERS_DATA = [];
-let TICKERS_DATA = [];
-
-function fmtPrice(p){
-  if(!p||p===0)return'—';
-  if(p>=1000)return'$'+p.toLocaleString('en',{maximumFractionDigits:0});
-  if(p>=1)return'$'+p.toLocaleString('en',{maximumFractionDigits:2});
-  return'$'+p.toFixed(4);
-}
-function fmtLarge(n){
-  if(!n)return'—';
-  if(n>=1e12)return'$'+(n/1e12).toFixed(2)+'T';
-  if(n>=1e9)return'$'+(n/1e9).toFixed(1)+'B';
-  if(n>=1e6)return'$'+(n/1e6).toFixed(0)+'M';
-  return'$'+n.toLocaleString();
-}
-
-// Calculate basic RSI from price change
-function calcSignal(change, vol){
-  if(change > 5) return {type:'sell', ind:'Overbought — RSI >75', str:4};
-  if(change > 2) return {type:'buy', ind:'Bullish Momentum', str:4};
-  if(change > 0.5) return {type:'buy', ind:'EMA Crossover', str:3};
-  if(change < -5) return {type:'buy', ind:'RSI Oversold <25', str:5};
-  if(change < -2) return {type:'sell', ind:'MACD Bearish Cross', str:4};
-  if(change < -0.5) return {type:'sell', ind:'Resistance Hit', str:3};
-  return {type:'hold', ind:'Bollinger Mid Band', str:2};
-}
-
-const EXCHANGES = ['Binance','OKX','ByBit','Kraken','MEXC','BitGet'];
-
-async function fetchLiveData(){
-  try{
-    const url=`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${CG_SYMBOLS.join(',')}&order=market_cap_desc&per_page=12&page=1&sparkline=false&price_change_percentage=24h`;
-    const res=await fetch(url);
-    if(!res.ok) throw new Error('API error');
-    const data=await res.json();
-    liveMarketData={};
-    data.forEach(c=>{ liveMarketData[c.id]=c; });
-
-    // Update PAIRS
-    Object.keys(CG_IDS).forEach(pair=>{
-      const id=CG_IDS[pair];
-      const c=liveMarketData[id];
-      if(c){
-        PAIRS[pair]={
-          price:c.current_price||0,
-          change:c.price_change_percentage_24h||0,
-          high:c.high_24h||0,
-          low:c.low_24h||0,
-          vol:fmtLarge(c.total_volume),
-          cap:fmtLarge(c.market_cap)
-        };
-      }
-    });
-
-    // Update livePrice for current pair
-    if(PAIRS[currentPair] && PAIRS[currentPair].price>0){
-      livePrice=PAIRS[currentPair].price;
-    }
-
-    // Build TICKERS_DATA
-    TICKERS_DATA=data.slice(0,10).map(c=>({
-      s:c.symbol.toUpperCase()+'/USDT',
-      p:fmtPrice(c.current_price),
-      c:(c.price_change_percentage_24h>=0?'+':'')+c.price_change_percentage_24h.toFixed(2)+'%',
-      up:c.price_change_percentage_24h>=0
-    }));
-
-    // Build SIGNALS_DATA from real price changes
-    SIGNALS_DATA=data.slice(0,10).map((c,i)=>{
-      const sig=calcSignal(c.price_change_percentage_24h, c.total_volume);
-      return{
-        type:sig.type,
-        pair:c.symbol.toUpperCase()+'/USDT',
-        indicator:sig.ind,
-        strength:sig.str,
-        exchange:EXCHANGES[i%EXCHANGES.length],
-        price:fmtPrice(c.current_price),
-        time:'live',
-        change:c.price_change_percentage_24h
-      };
-    });
-
-    // Build MOVERS — sorted by abs change
-    MOVERS_DATA=[...data].sort((a,b)=>Math.abs(b.price_change_percentage_24h)-Math.abs(a.price_change_percentage_24h))
-    .slice(0,6).map(c=>({
-      sym:c.symbol.toUpperCase(),
-      price:fmtPrice(c.current_price),
-      chg:(c.price_change_percentage_24h>=0?'+':'')+c.price_change_percentage_24h.toFixed(2)+'%',
-      up:c.price_change_percentage_24h>=0
-    }));
-
-    // Refresh UI if dashboard active
-    if(document.getElementById('dashScreen').classList.contains('active')){
-      updateTopbar();
-      renderSignals();
-      renderMovers();
-      initTicker();
-      // update overview cards
-      const pd=PAIRS[currentPair];
-      if(pd && pd.price>0){
-        document.getElementById('ovPrice').textContent=fmtPrice(pd.price);
-        document.querySelector('.overview-row .ov-card:nth-child(2) .ov-val').textContent=pd.vol;
-        document.querySelector('.overview-row .ov-card:nth-child(3) .ov-val').innerHTML=`<span style="color:var(--green)">${fmtPrice(pd.high)}</span> / <span style="color:var(--red)">${fmtPrice(pd.low)}</span>`;
-        document.querySelector('.overview-row .ov-card:nth-child(4) .ov-val').textContent=pd.cap;
-      }
-    }
-    console.log('✅ Live data updated:', new Date().toLocaleTimeString());
-  } catch(e){
-    console.warn('Live data fetch failed:', e.message);
-  }
-}
-
-// Fetch chart history from CoinGecko
-async function fetchChartData(coinId, days=1){
-  try{
-    const url=`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`;
-    const res=await fetch(url);
-    const data=await res.json();
-    if(data.prices && data.prices.length>0){
-      priceData=data.prices.map((p,i,arr)=>{
-        const prev=i>0?arr[i-1][1]:p[1];
-        return{o:prev,h:Math.max(p[1],prev)*1.001,l:Math.min(p[1],prev)*0.999,c:p[1]};
-      });
-      // Keep last 80 points
-      if(priceData.length>80)priceData=priceData.slice(-80);
-      livePrice=priceData[priceData.length-1].c;
-      drawChart('priceChart');
-      drawChart('taChart');
-    }
-  }catch(e){ console.warn('Chart data fetch failed'); generatePriceData(); }
-}
-
-const NEWS_DATA = [
-  {text:'<strong>Bitcoin</strong> holds key support — institutional buying continues amid ETF inflows.',time:'Live'},
-  {text:'<strong>Ethereum</strong> Pectra upgrade on testnet — gas fee improvements expected for L2.',time:'1h ago'},
-  {text:'<strong>Solana</strong> DeFi TVL reaches new high as ecosystem activity surges.',time:'2h ago'},
-  {text:'<strong>Binance</strong> launches new staking products for Pakistani users.',time:'3h ago'},
-  {text:'<strong>XRP</strong> legal clarity boosts sentiment — institutional interest growing.',time:'4h ago'},
-  {text:'<strong>Pakistan SBP</strong> crypto regulation framework in final stages of review.',time:'5h ago'},
-  {text:'<strong>DeFi</strong> total value locked crosses $120B — highest since 2022.',time:'6h ago'},
-  {text:'<strong>DOGE</strong> whale activity spike detected — large transfers on-chain.',time:'8h ago'},
+const TICKERS_DATA = [
+  {s:'BTC/USDT',p:'$67,420',c:'+2.4%',up:true},
+  {s:'ETH/USDT',p:'$3,512',c:'+1.8%',up:true},
+  {s:'SOL/USDT',p:'$142.30',c:'-0.9%',up:false},
+  {s:'BNB/USDT',p:'$412',c:'+0.5%',up:true},
+  {s:'XRP/USDT',p:'$0.582',c:'-1.2%',up:false},
+  {s:'ADA/USDT',p:'$0.487',c:'+3.1%',up:true},
+  {s:'DOGE/USDT',p:'$0.132',c:'+5.2%',up:true},
+  {s:'AVAX/USDT',p:'$34.20',c:'-0.4%',up:false},
+  {s:'DOT/USDT',p:'$7.91',c:'+1.1%',up:true},
+  {s:'MATIC/USDT',p:'$0.89',c:'+2.7%',up:true},
 ];
 
-let submissions = JSON.parse(localStorage.getItem('bt_subs') || '[]');
+const SIGNALS_DATA = [
+  {type:'buy',pair:'BTC/USDT',indicator:'RSI Oversold',strength:5,exchange:'Binance',price:'$67,420',time:'2m ago'},
+  {type:'sell',pair:'ETH/USDT',indicator:'MACD Bearish',strength:3,exchange:'OKX',price:'$3,512',time:'5m ago'},
+  {type:'buy',pair:'SOL/USDT',indicator:'EMA Crossover',strength:4,exchange:'ByBit',price:'$142.30',time:'8m ago'},
+  {type:'hold',pair:'BNB/USDT',indicator:'Bollinger Mid',strength:2,exchange:'Binance',price:'$412',time:'12m ago'},
+  {type:'buy',pair:'DOGE/USDT',indicator:'Volume Spike',strength:4,exchange:'MEXC',price:'$0.132',time:'15m ago'},
+  {type:'sell',pair:'XRP/USDT',indicator:'Resistance Hit',strength:3,exchange:'Kraken',price:'$0.582',time:'18m ago'},
+  {type:'buy',pair:'ADA/USDT',indicator:'Golden Cross',strength:5,exchange:'OKX',price:'$0.487',time:'22m ago'},
+  {type:'hold',pair:'AVAX/USDT',indicator:'RSI Neutral',strength:2,exchange:'BitGet',price:'$34.20',time:'28m ago'},
+  {type:'buy',pair:'DOT/USDT',indicator:'Support Bounce',strength:4,exchange:'ByBit',price:'$7.91',time:'33m ago'},
+  {type:'sell',pair:'LTC/USDT',indicator:'Death Cross',strength:5,exchange:'Binance',price:'$84.20',time:'40m ago'},
+];
+
+const NEWS_DATA = [
+  {text:'<strong>Bitcoin ETF</strong> sees record $1.2B inflow in single day as institutional demand surges ahead of halving.',time:'5m ago'},
+  {text:'<strong>Ethereum</strong> developers finalize Pectra upgrade timeline — expected to reduce gas fees by 30% for L2 transactions.',time:'18m ago'},
+  {text:'<strong>SEC</strong> approves three new spot crypto ETFs. Market reacts positively with broad rally across top 20 coins.',time:'42m ago'},
+  {text:'<strong>Binance</strong> reports Q1 trading volume up 67% year-over-year, announces new Pakistan regional office.',time:'1h ago'},
+  {text:'<strong>MicroStrategy</strong> announces additional $500M Bitcoin purchase, bringing total holdings above 220,000 BTC.',time:'2h ago'},
+  {text:'<strong>Solana</strong> breaks all-time transaction record with 65,000 TPS sustained for 10 minutes during network stress test.',time:'3h ago'},
+  {text:'<strong>Pakistan SBP</strong> issues new guidelines for crypto exchanges operating domestically — full regulation framework by Q3.',time:'5h ago'},
+  {text:'<strong>Coinbase</strong> launches institutional lending desk targeting hedge funds and family offices in MENA region.',time:'7h ago'},
+];
+
+const TA_INDICATORS = [
+  {name:'RSI (14)',val:'34.2',sig:'buy'},{name:'MACD',val:'Bullish',sig:'buy'},
+  {name:'BB Upper',val:'$69,200',sig:'neutral'},{name:'BB Lower',val:'$64,800',sig:'neutral'},
+  {name:'EMA 20',val:'$66,100',sig:'buy'},{name:'EMA 50',val:'$64,300',sig:'buy'},
+  {name:'SMA 200',val:'$58,900',sig:'buy'},{name:'Stoch RSI',val:'22.1',sig:'buy'},
+  {name:'OBV',val:'Increasing',sig:'buy'},{name:'ADX',val:'32.4',sig:'neutral'},
+  {name:'CCI (20)',val:'-88.3',sig:'buy'},{name:'Williams %R',val:'-78.2',sig:'buy'},
+  {name:'ATR (14)',val:'$1,840',sig:'neutral'},{name:'VWAP',val:'$67,100',sig:'neutral'},
+];
+
+const MOVERS_DATA = [
+  {sym:'DOGE',price:'$0.132',chg:'+5.2%',up:true},
+  {sym:'ADA',price:'$0.487',chg:'+3.1%',up:true},
+  {sym:'BTC',price:'$67,420',chg:'+2.4%',up:true},
+  {sym:'ETH',price:'$3,512',chg:'+1.8%',up:true},
+  {sym:'XRP',price:'$0.582',chg:'-1.2%',up:false},
+  {sym:'SOL',price:'$142.30',chg:'-0.9%',up:false},
+];
+
+let submissions = JSON.parse(localStorage.getItem('bt_subs') || 'null') || [
+  {id:1,name:'Ahmed Ali',email:'ahmed@gmail.com',plan:'Pro',method:'jazzcash',amount:'PKR 8,100',date:'2025-03-14 10:22',status:'pending',phone:'0301-1234567'},
+  {id:2,name:'Zara Khan',email:'zara@hotmail.com',plan:'Elite',method:'bank',amount:'PKR 22,100',date:'2025-03-14 14:55',status:'approved',phone:'0321-9876543'},
+  {id:3,name:'Usman Raza',email:'usman@yahoo.com',plan:'Pro',method:'crypto',amount:'$29 USDT',date:'2025-03-15 09:10',status:'pending',phone:'—'},
+  {id:4,name:'Sara Malik',email:'sara@email.com',plan:'Pro',method:'jazzcash',amount:'PKR 8,100',date:'2025-03-15 18:33',status:'rejected',phone:'0312-5556677'},
+  {id:5,name:'Bilal Sheikh',email:'bilal@gmail.com',plan:'Elite',method:'crypto',amount:'$79 USDT',date:'2025-03-16 08:05',status:'pending',phone:'—'},
+];
 let aFilterVal='all';
 let priceData=[];
 let currentPair='BTC/USDT';
-let livePrice=0;
+let livePrice=67420;
 let userAlerts=[];
 let alertIdCounter=1;
-
-function startLive(){
-  // Fetch Binance all coins
-  fetchBinanceSpot();
-  fetchBinanceFutures();
-  setInterval(fetchBinanceSpot, 15000);  // refresh every 15s
-  setInterval(fetchBinanceFutures, 30000);
-
-  // Fetch CoinGecko for detailed market data
-  fetchLiveData();
-  setInterval(fetchLiveData, 60000);
-
-  // Micro price tick every 2s
-  setInterval(()=>{
-    if(livePrice>0){
-      livePrice=livePrice*(1+(Math.random()-0.5)*0.0003);
-      updateTopbar();
-      renderOrderBook();
-      if(priceData.length>0){
-        const last=priceData[priceData.length-1];
-        last.c=livePrice;last.h=Math.max(last.h,livePrice);last.l=Math.min(last.l,livePrice);
-      }
-      drawChart('priceChart');
-    }
-  },2000);
-
-  setInterval(updateDI,8000);
-
-  setInterval(()=>{
-    if(SIGNALS_DATA.length>0){
-      const s=SIGNALS_DATA[Math.floor(Math.random()*SIGNALS_DATA.length)];
-      const icon=s.type==='buy'?'⚡ BUY':s.type==='sell'?'📉 SELL':'⏸ HOLD';
-      showToast(icon+': '+s.pair+' — '+s.indicator,'success');
-    }
-  },20000);
-}
 
 // =============================================
 // TICKER
 // =============================================
 function initTicker(){
   const t=document.getElementById('tickerTrack');
-  if(!t)return;
-  const source=spotCoins.length>0?spotCoins.slice(0,20):TICKERS_DATA;
-  const arr=spotCoins.length>0
-    ?[...source,...source].map(c=>({s:c.pair,p:fmtPrice(c.price),c:(c.change>=0?'+':'')+c.change.toFixed(2)+'%',up:c.change>=0}))
-    :[...TICKERS_DATA,...TICKERS_DATA];
+  const arr=[...TICKERS_DATA,...TICKERS_DATA];
   t.innerHTML=arr.map(x=>`<div class="tick"><span class="ts">${x.s}</span><span class="tp">${x.p}</span><span class="${x.up?'tu':'td'}">${x.c}</span></div>`).join('');
 }
 
@@ -1698,7 +1315,7 @@ async function doSignup(){
   const email = document.getElementById('suEmail').value.trim();
   const pass = document.getElementById('suPass').value;
   if(!name||!email||!pass){showToast('Sab fields fill karein','warn');return;}
-  if(pass.length<6){showToast('Password kam az kam 6 characters chahiye','warn');return;}
+  if(pass.length<6){showToast('Password kam az kam 6 characters','warn');return;}
   const btn = document.querySelector('#suForm .modal-btn');
   btn.textContent='Creating...';btn.disabled=true;
   if(supa){
@@ -1706,13 +1323,13 @@ async function doSignup(){
       email, password:pass,
       options:{data:{full_name:name}}
     });
-    btn.textContent='Create Account';btn.disabled=false;
+    btn.textContent='Create Account — Free';btn.disabled=false;
     if(error){showToast('❌ '+error.message,'warn');return;}
-    currentUser = data.user;
+    showToast('✅ Account bana! Email check karein verification ke liye','success');
   } else {
-    btn.textContent='Create Account';btn.disabled=false;
+    btn.textContent='Create Account — Free';btn.disabled=false;
+    showToast('✅ Welcome '+name+'!','success');
   }
-  showToast('✅ Khush Amdeed '+name+'! Full access mil gaya!','success');
   closeOverlay('authOverlay');
   enterDashboard();
 }
@@ -1820,7 +1437,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){['authOverlay','pay
 // DASHBOARD
 // =============================================
 function initDash(){
-  livePrice = PAIRS[currentPair].price || 0;
+  livePrice=PAIRS[currentPair].price;
   generatePriceData();
   updateTopbar();
   renderOverview();
@@ -1835,9 +1452,6 @@ function initDash(){
   drawChart('taChart');
   updateDI();
   startLive();
-  // Fetch real chart history
-  const coinId = CG_IDS[currentPair] || 'bitcoin';
-  fetchChartData(coinId, 1);
 }
 
 function switchView(view,el){
@@ -1851,7 +1465,7 @@ function switchView(view,el){
 
 function changePair(){
   currentPair=document.getElementById('pairSelect').value;
-  livePrice=PAIRS[currentPair].price||0;
+  livePrice=PAIRS[currentPair].price;
   generatePriceData();
   updateTopbar();
   renderOverview();
@@ -1859,9 +1473,6 @@ function changePair(){
   drawChart('priceChart');
   document.getElementById('chartTitle').textContent=currentPair+' — Price Chart';
   document.getElementById('taTitle').textContent=currentPair;
-  // Fetch real chart for new pair
-  const coinId=CG_IDS[currentPair]||'bitcoin';
-  fetchChartData(coinId,1);
 }
 
 function generatePriceData(){
@@ -1879,14 +1490,14 @@ function generatePriceData(){
 
 function updateTopbar(){
   const pd=PAIRS[currentPair];
-  if(!pd||livePrice===0)return;
-  document.getElementById('topbarPrice').textContent=fmtPrice(livePrice);
-  const ch=pd.change||0;
+  const pp=livePrice;
+  document.getElementById('topbarPrice').textContent='$'+pp.toLocaleString('en',{maximumFractionDigits:currentPair.includes('DOGE')||currentPair.includes('XRP')||currentPair.includes('ADA')?4:2});
+  const ch=pd.change;
   const cel=document.getElementById('topbarChange');
-  cel.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%';
+  cel.textContent=(ch>=0?'+':'')+ch.toFixed(1)+'%';
   cel.className='dash-change '+(ch>=0?'up':'dn');
-  document.getElementById('ovPrice').textContent=fmtPrice(livePrice);
-  document.getElementById('obMid').textContent=fmtPrice(livePrice);
+  document.getElementById('ovPrice').textContent='$'+pp.toLocaleString('en',{maximumFractionDigits:2});
+  document.getElementById('obMid').textContent='$'+pp.toLocaleString('en',{maximumFractionDigits:2});
   document.getElementById('obMid').style.color=ch>=0?'var(--green)':'var(--red)';
 }
 
@@ -2004,25 +1615,6 @@ function renderHeatmap(){
 
 // TECHNICAL ANALYSIS
 function renderTA(){
-  const p=livePrice||PAIRS[currentPair].price||0;
-  const ch=PAIRS[currentPair].change||0;
-  const sig=calcSignal(ch,0);
-  const TA_INDICATORS=[
-    {name:'RSI (14)',val:ch<-3?'28.'+Math.floor(Math.random()*9):ch>3?'72.'+Math.floor(Math.random()*9):'48.'+Math.floor(Math.random()*9),sig:ch<-3?'buy':ch>3?'sell':'neutral'},
-    {name:'MACD',val:ch>0?'Bullish':'Bearish',sig:ch>0?'buy':'sell'},
-    {name:'BB Upper',val:fmtPrice(p*1.025),sig:'neutral'},
-    {name:'BB Lower',val:fmtPrice(p*0.975),sig:'neutral'},
-    {name:'EMA 20',val:fmtPrice(p*0.998),sig:ch>0?'buy':'sell'},
-    {name:'EMA 50',val:fmtPrice(p*0.985),sig:ch>-1?'buy':'neutral'},
-    {name:'SMA 200',val:fmtPrice(p*0.92),sig:'buy'},
-    {name:'Stoch RSI',val:ch<-3?'18.'+Math.floor(Math.random()*9):ch>3?'81.'+Math.floor(Math.random()*9):'52.'+Math.floor(Math.random()*9),sig:ch<-3?'buy':ch>3?'sell':'neutral'},
-    {name:'OBV',val:ch>0?'Increasing':'Decreasing',sig:ch>0?'buy':'sell'},
-    {name:'ADX',val:(25+Math.abs(ch)*2).toFixed(1),sig:'neutral'},
-    {name:'CCI (20)',val:ch<-2?'-'+Math.floor(80+Math.abs(ch)*10):ch>2?'+'+Math.floor(80+ch*10):'12',sig:ch<-2?'buy':ch>2?'sell':'neutral'},
-    {name:'Williams %R',val:ch<-2?'-'+Math.floor(70+Math.abs(ch)*5):'-'+Math.floor(30+Math.abs(ch)*5),sig:ch<-2?'buy':'neutral'},
-    {name:'ATR (14)',val:fmtPrice(p*0.025),sig:'neutral'},
-    {name:'VWAP',val:fmtPrice(p*0.999),sig:p>p*0.999?'buy':'sell'},
-  ];
   const el=document.getElementById('taGrid');
   if(!el)return;
   el.innerHTML=TA_INDICATORS.map(t=>`
@@ -2033,9 +1625,8 @@ function renderTA(){
   const buys=TA_INDICATORS.filter(t=>t.sig==='buy').length;
   const sells=TA_INDICATORS.filter(t=>t.sig==='sell').length;
   const neutral=TA_INDICATORS.filter(t=>t.sig==='neutral').length;
-  const lbl=document.getElementById('gaugeLabel');
-  lbl.textContent=buys>8?'STRONG BUY':buys>5?'BUY':sells>5?'SELL':sells>8?'STRONG SELL':'NEUTRAL';
-  lbl.style.color=buys>5?'var(--green)':sells>5?'var(--red)':'var(--gold)';
+  document.getElementById('gaugeLabel').textContent=buys>8?'STRONG BUY':buys>5?'BUY':'NEUTRAL';
+  document.getElementById('gaugeLabel').style.color=buys>5?'var(--green)':'var(--gold)';
   document.getElementById('gaugeSub').textContent=`${buys} Buy · ${neutral} Neutral · ${sells} Sell`;
 }
 
@@ -2256,22 +1847,4 @@ function saveCreds(){
 
 // =============================================
 // SMOOTH SCROLL (landing)
-// =============SMOOTH SCROLL===
-document.querySelectorAll("a[href^=\"#\"]").forEach(a=>{
-  a.addEventListener("click",e=>{
-    const t=document.querySelector(a.getAttribute("href"));
-    if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth"});}
-  });
-});
-
-// =============================================
-// INIT
-// =============================================
-window.addEventListener("load", function(){
-  initSupabase();
-  initTicker();
-  initLandingChart();
-});
-</script>
-</body>
-</html>
+// ==========
