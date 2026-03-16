@@ -5404,29 +5404,28 @@ function updateLiveTickerBar() {
 // ─── FORCE DYNAMIC ISLAND ON ANY SIGNAL ───
 const _origUpdateUI = typeof updateUI === 'function' ? updateUI : null;
 
-// Override checkAndNotify to always fire DI for any scan result
-const _origCheckNotify = checkAndNotify;
-function checkAndNotify(sig) {
-  _origCheckNotify(sig);
-  // Force DI to show on any LONG/SHORT signal regardless of threshold
+// Patch checkAndNotify — inject extra DI firing without recursion
+const _checkAndNotify_orig = window.checkAndNotify;
+window.checkAndNotify = function(sig) {
+  if (typeof _checkAndNotify_orig === 'function') _checkAndNotify_orig(sig);
+  // Force DI to show on any signal conf >= 55%
   if (sig && (sig.action === 'ENTER' || sig.action === 'CONFIRM') && sig.conf >= 55) {
-    updateDynamicIsland(
-      curSym, sig.last, sig.slope5,
-      { dir: sig.isLong ? 'LONG' : 'SHORT', conf: sig.conf, action: sig.action },
-      { entry: fmt(sig.entry), tp: fmt(sig.tp1), sl: fmt(sig.sl) }
-    );
-    // Also add to notification drawer
-    addNotifToDrawer(sig, curSym);
+    try {
+      updateDynamicIsland(
+        curSym, sig.last, sig.slope5,
+        { dir: sig.isLong ? 'LONG' : 'SHORT', conf: sig.conf, action: sig.action },
+        { entry: fmt(sig.entry), tp: fmt(sig.tp1), sl: fmt(sig.sl) }
+      );
+      addNotifToDrawer(sig, curSym);
+    } catch(e) {}
   }
-}
+};
 
 // ─── ENHANCED SYMBOL SEARCH ───
-// Override openDd to show all loaded coins with prices
-const _origOpenDd = openDd;
+// Override openDd with enhanced version (no recursion — fully replaces)
 function openDd() {
   const q = (document.getElementById('symSearch')?.value || '').toUpperCase().replace(/[/\-]/g, '');
   const dd = document.getElementById('symDropdown'); if (!dd) return;
-  // Sort by volume if available
   let keys;
   if (allTickerData.length > 0) {
     const volMap = {};
@@ -5460,6 +5459,7 @@ function openDd() {
 
 // ─── AUTO REFRESH LIVE PRICES ───
 let _liveRefreshTimer = null;
+let _liveRefreshCount = 0;
 function startLiveRefresh() {
   if (_liveRefreshTimer) clearInterval(_liveRefreshTimer);
   _liveRefreshTimer = setInterval(async () => {
@@ -5473,9 +5473,8 @@ function startLiveRefresh() {
       }).catch(() => {});
     }
     // Refresh all tickers every 5 rounds
-    if (!_liveRefreshTimer._count) _liveRefreshTimer._count = 0;
-    _liveRefreshTimer._count++;
-    if (_liveRefreshTimer._count % 5 === 0) {
+    _liveRefreshCount++;
+    if (_liveRefreshCount % 5 === 0) {
       const r = await fetchAllTickers().catch(() => null);
       if (r && r.src === 'Binance') {
         r.data.filter(t => t.symbol.endsWith('USDT')).forEach(t => {
