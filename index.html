@@ -1176,18 +1176,13 @@ tr:hover td{background:rgba(255,255,255,.02);}
 // =============================================
 const SUPA_URL = 'https://aorrltfzhiasahpxbzzz.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcnJsdGZ6aGlhc2FocHhienp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NTkwNDgsImV4cCI6MjA4OTIzNTA0OH0.bdvcl77-s1W1vpK610aoa0upefoYGu0Sl1qlPCWkdu8';
-const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
-
-// Check if user already logged in
-supa.auth.getSession().then(({data:{session}})=>{
-  if(session){
-    currentUser = session.user;
-  }
-});
-supa.auth.onAuthStateChange((_,session)=>{
-  currentUser = session?.user || null;
-});
+let supa = null;
 let currentUser = null;
+try {
+  supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+  supa.auth.getSession().then(({data:{session}})=>{ if(session) currentUser=session.user; });
+  supa.auth.onAuthStateChange((_,session)=>{ currentUser=session?.user||null; });
+} catch(e) { console.warn('Supabase init failed, running in offline mode', e); }
 const PAIRS = {
   'BTC/USDT': {price:67420,change:2.4,high:68120,low:65800,vol:'$38.2B',cap:'$1.33T'},
   'ETH/USDT': {price:3512,change:1.8,high:3590,low:3420,vol:'$18.4B',cap:'$421B'},
@@ -1323,13 +1318,18 @@ async function doSignup(){
   if(pass.length<6){showToast('Password kam az kam 6 characters','warn');return;}
   const btn = document.querySelector('#suForm .modal-btn');
   btn.textContent='Creating...';btn.disabled=true;
-  const {data,error} = await supa.auth.signUp({
-    email, password:pass,
-    options:{data:{full_name:name}}
-  });
-  btn.textContent='Create Account — Free';btn.disabled=false;
-  if(error){showToast('❌ '+error.message,'warn');return;}
-  showToast('✅ Account bana! Email check karein verification ke liye','success');
+  if(supa){
+    const {data,error} = await supa.auth.signUp({
+      email, password:pass,
+      options:{data:{full_name:name}}
+    });
+    btn.textContent='Create Account — Free';btn.disabled=false;
+    if(error){showToast('❌ '+error.message,'warn');return;}
+    showToast('✅ Account bana! Email check karein verification ke liye','success');
+  } else {
+    btn.textContent='Create Account — Free';btn.disabled=false;
+    showToast('✅ Welcome '+name+'!','success');
+  }
   closeOverlay('authOverlay');
   enterDashboard();
 }
@@ -1340,11 +1340,16 @@ async function doLogin(){
   if(!email||!pass){showToast('Email aur password darj karein','warn');return;}
   const btn = document.querySelector('#liForm .modal-btn');
   btn.textContent='Signing in...';btn.disabled=true;
-  const {data,error} = await supa.auth.signInWithPassword({email,password:pass});
-  btn.textContent='Sign In';btn.disabled=false;
-  if(error){showToast('❌ '+error.message,'warn');return;}
-  currentUser = data.user;
-  showToast('✅ Welcome back!','success');
+  if(supa){
+    const {data,error} = await supa.auth.signInWithPassword({email,password:pass});
+    btn.textContent='Sign In';btn.disabled=false;
+    if(error){showToast('❌ '+error.message,'warn');return;}
+    currentUser = data.user;
+    showToast('✅ Welcome back!','success');
+  } else {
+    btn.textContent='Sign In';btn.disabled=false;
+    showToast('✅ Welcome back!','success');
+  }
   closeOverlay('authOverlay');
   enterDashboard();
 }
@@ -1405,14 +1410,11 @@ async function submitPay(){
     status:'pending',
     user_id: currentUser?.id || null
   };
-  const {error} = await supa.from('submissions').insert([sub]);
-  btn.textContent='Submit Receipt for Verification';btn.disabled=false;
-  if(error){
-    // fallback to localStorage if table not created yet
-    const fallback=JSON.parse(localStorage.getItem('bt_subs')||'[]');
-    fallback.push({...sub,id:fallback.length+1,date:new Date().toLocaleString('sv').slice(0,16)});
-    localStorage.setItem('bt_subs',JSON.stringify(fallback));
+  if(supa){
+    const {error} = await supa.from('submissions').insert([sub]);
+    if(error) console.warn('Supabase insert failed:', error);
   }
+  btn.textContent='Submit Receipt for Verification';btn.disabled=false;
   document.getElementById('payStep1').style.display='none';
   document.getElementById('paySuccess').classList.add('vis');
 }
@@ -1767,10 +1769,11 @@ function aFilter(f,btn){
 }
 async function renderAdmin(){
   const q=(document.getElementById('aSrch')?.value||'').toLowerCase();
-  // Try Supabase first
-  let {data:remoteData, error} = await supa.from('submissions').select('*').order('id',{ascending:false});
-  if(!error && remoteData && remoteData.length>0){
-    submissions = remoteData.map(s=>({...s,date:s.created_at?s.created_at.slice(0,16):s.date||'—'}));
+  if(supa){
+    let {data:remoteData, error} = await supa.from('submissions').select('*').order('id',{ascending:false});
+    if(!error && remoteData && remoteData.length>0){
+      submissions = remoteData.map(s=>({...s,date:s.created_at?s.created_at.slice(0,16):s.date||'—'}));
+    }
   }
   const filtered=submissions.filter(s=>(aFilterVal==='all'||s.status===aFilterVal)&&(!q||s.name.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)));
   const tbody=document.getElementById('adminTbody');
@@ -1805,8 +1808,7 @@ function updateAdminStats(){
 async function setStatus(id,st){
   const s=submissions.find(x=>x.id===id);if(!s)return;
   s.status=st;
-  // Update in Supabase
-  await supa.from('submissions').update({status:st}).eq('id',id);
+  if(supa) await supa.from('submissions').update({status:st}).eq('id',id);
   localStorage.setItem('bt_subs',JSON.stringify(submissions));
   renderAdmin();showToast('Status updated: '+st,'success');
 }
