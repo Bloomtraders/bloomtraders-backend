@@ -77,12 +77,13 @@
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#exchanges">Exchanges</a></li>
     <li><a href="#testimonials">Reviews</a></li>
-    <!-- Admin: access via #adminportal2025 -->
+    <li><a href="#" onclick="showAdmin();return false;">Admin</a></li>
     <li><a href="dashboard.html" style="color:var(--gold);font-weight:700;">🚀 Dashboard</a></li>
   </ul>
   <div class="nav-cta">
-    <button class="btn-ghost" onclick="window.location.href='dashboard.html'">Sign In</button>
-    <button class="btn-gold" onclick="window.location.href='dashboard.html'">Start Free</button>
+    <button class="btn-ghost" id="navSignIn" onclick="openOverlay('authOverlay')">Sign In</button>
+    <button class="btn-gold" id="navGetStarted" onclick="openOverlay('authOverlay')">Get Started</button>
+    <button class="btn-gold" id="navDashBtn" style="display:none" onclick="goToDashboard()">🚀 Dashboard</button>
   </div>
 </nav>
 <div class="ticker-bar">
@@ -168,12 +169,12 @@
       <div class="plan-period">per month · ~PKR 13,900</div>
       <div class="plan-div"></div>
       <ul class="plan-feats">
-        <li><span class="ck">✓</span> Live price feed (all pairs)</li>
-        <li><span class="ck">✓</span> AI Chart (candlestick)</li>
-        <li><span class="ck">✓</span> Basic signals</li>
-        <li><span class="cx">✗</span> Multi-pair scanner</li>
-        <li><span class="cx">✗</span> Confirmed signals panel</li>
-        <li><span class="cx">✗</span> Volume spikes & movers</li>
+        <li><span class="ck">✓</span> 3 trading pairs</li>
+        <li><span class="ck">✓</span> Basic price charts</li>
+        <li><span class="ck">✓</span> 1 exchange (Binance)</li>
+        <li><span class="ck">✓</span> Daily signals (delayed)</li>
+        <li><span class="cx">✗</span> <span style="opacity:.4">Liquidation heatmap</span></li>
+        <li><span class="cx">✗</span> <span style="opacity:.4">Dynamic Island alerts</span></li>
       </ul>
       <button class="plan-btn outline" onclick="openOverlay('authOverlay')">Get Started Free</button>
     </div>
@@ -184,12 +185,12 @@
       <div class="plan-period">per month · ~PKR 55,600</div>
       <div class="plan-div"></div>
       <ul class="plan-feats">
-        <li><span class="ck">✓</span> Everything in Starter</li>
-        <li><span class="ck">✓</span> Unlimited signals</li>
-        <li><span class="ck">✓</span> Multi-pair scanner (500+ coins)</li>
-        <li><span class="ck">✓</span> Confirmed signals + 6 confirmations</li>
-        <li><span class="ck">✓</span> Volume spikes & gainers/losers</li>
-        <li><span class="ck">✓</span> Supply & Demand zones</li>
+        <li><span class="ck">✓</span> Unlimited trading pairs</li>
+        <li><span class="ck">✓</span> Advanced charting suite</li>
+        <li><span class="ck">✓</span> All 7 exchanges</li>
+        <li><span class="ck">✓</span> Real-time signals</li>
+        <li><span class="ck">✓</span> Liquidation heatmap</li>
+        <li><span class="ck">✓</span> Dynamic Island alerts</li>
       </ul>
       <button class="plan-btn solid" onclick="openPayModal('Pro','$200 / PKR 55,600',200,55600)">Subscribe — Pro</button>
     </div>
@@ -200,11 +201,11 @@
       <div class="plan-div"></div>
       <ul class="plan-feats">
         <li><span class="ck">✓</span> Everything in Pro</li>
-        <li><span class="ck">✓</span> 1000+ Binance Spot + Futures</li>
-        <li><span class="ck">✓</span> Liquidation heatmap</li>
-        <li><span class="ck">✓</span> Priority WhatsApp support</li>
-        <li><span class="ck">✓</span> Early access to new features</li>
-        <li><span class="ck">✓</span> Custom alert setup help</li>
+        <li><span class="ck">✓</span> AI signal engine (full)</li>
+        <li><span class="ck">✓</span> Portfolio analytics</li>
+        <li><span class="ck">✓</span> API access</li>
+        <li><span class="ck">✓</span> Priority support</li>
+        <li><span class="ck">✓</span> Custom alert webhooks</li>
       </ul>
       <button class="plan-btn outline" onclick="openPayModal('Elite','$100 / PKR 27,800',100,27800)">Subscribe — Elite</button>
     </div>
@@ -240,13 +241,31 @@
 </footer>
 </div>
 <div class="overlay" id="authOverlay" onclick="closeBg(event,'authOverlay')">
-  <div class="modal" style="text-align:center;">
+  <div class="modal">
     <button class="modal-x" onclick="closeOverlay('authOverlay')">✕</button>
-    <div style="font-size:32px;margin-bottom:12px;">🚀</div>
-    <h3 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px;">BloomTraders</h3>
-    <div class="modal-sub" style="margin-bottom:28px;">Professional crypto trading platform</div>
-    <button class="modal-btn" onclick="window.location.href='dashboard.html'" style="margin-bottom:12px;">Enter Dashboard →</button>
-    <div style="font-size:12px;color:var(--dim);">Full access — no signup required</div>
+    <h3>BloomTraders</h3>
+    <div class="modal-sub">Login or create your account</div>
+    <div class="tabs">
+      <button class="tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="tab" id="tabRegister" onclick="switchAuthTab('register')">Register</button>
+    </div>
+    <!-- Login Form -->
+    <div id="authFormLogin">
+      <div class="login-err" id="loginErr"></div>
+      <div class="fg"><label>Email</label><input type="email" id="loginEmail" placeholder="you@email.com"></div>
+      <div class="fg"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+      <button class="modal-btn" id="loginBtn" onclick="doLogin()">Sign In →</button>
+      <div class="modal-ft"><a href="#" onclick="doReset();return false;">Forgot password?</a></div>
+    </div>
+    <!-- Register Form -->
+    <div id="authFormRegister" style="display:none;">
+      <div class="login-err" id="regErr"></div>
+      <div class="fg"><label>Full Name</label><input type="text" id="regName" placeholder="Ahmed Khan"></div>
+      <div class="fg"><label>Email</label><input type="email" id="regEmail" placeholder="you@email.com"></div>
+      <div class="fg"><label>Password (min 6 chars)</label><input type="password" id="regPass" placeholder="••••••••"></div>
+      <button class="modal-btn" id="regBtn" onclick="doRegister()">Create Account →</button>
+      <div class="modal-ft" style="font-size:11px;color:var(--dim);margin-top:10px;">Account create karne ke baad payment karein.<br>Admin approval ke baad dashboard access milega.</div>
+    </div>
   </div>
 </div>
 <div class="overlay" id="payOverlay" onclick="closeBg(event,'payOverlay')">
@@ -336,7 +355,7 @@
       <div class="fg"><label>Username</label><input type="text" id="adminUser" placeholder="admin" autocomplete="off"></div>
       <div class="fg"><label>Password</label><input type="password" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()"></div>
       <button class="modal-btn" onclick="adminLogin()">Sign In</button>
-      <div style="font-size:11px;color:var(--dim);margin-top:10px;">Contact: BLOOMTRADERS134@GMAIL.COM</div>
+      <div class="cred-hint">Username: <strong>admin</strong><br>Password: <strong>bloom@2025</strong></div>
       <button style="margin-top:14px;width:100%;background:none;border:1px solid var(--bs);color:var(--dim);padding:9px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all .2s;" onclick="showLanding()">← Back to site</button>
     </div>
   </div>
@@ -390,27 +409,20 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>// =============================================
-// ═══════════════════════════════════════════════════
-// BLOOMTRADERS — COMPLETE AUTH + PREMIUM SYSTEM
-// ═══════════════════════════════════════════════════
-const SUPA_URL = 'https://aorrltfzhiasahpxbzzz.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcnJsdGZ6aGlhc2FocHhienp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NTkwNDgsImV4cCI6MjA4OTIzNTA0OH0.bdvcl77-s1W1vpK610aoa0upefoYGu0Sl1qlPCWkdu8';
-let supa=null, currentUser=null, currentSession=null;
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const SUPA_URL='https://aorrltfzhiasahpxbzzz.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcnJsdGZ6aGlhc2FocHhienp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NTkwNDgsImV4cCI6MjA4OTIzNTA0OH0.bdvcl77-s1W1vpK610aoa0upefoYGu0Sl1qlPCWkdu8';
+let supa=null,currentUser=null;
 
-function initSupabase(){
-  try{
-    if(typeof supabase!=='undefined'){
-      supa=supabase.createClient(SUPA_URL,SUPA_KEY);
-      supa.auth.getSession().then(({data:{session}})=>{
-        if(session){currentSession=session;currentUser=session.user;onUserLoggedIn(session.user);}
-      });
-      supa.auth.onAuthStateChange((_,session)=>{
-        currentSession=session;currentUser=session?.user||null;
-        if(currentUser)onUserLoggedIn(currentUser);else onUserLoggedOut();
-      });
-    }
-  }catch(e){}
+function openOverlay(id){const el=document.getElementById(id);if(el)el.classList.add('open');}
+function closeOverlay(id){const el=document.getElementById(id);if(el)el.classList.remove('open');}
+function closeBg(e,id){if(e.target===e.currentTarget)closeOverlay(id);}
+
+function showToast(msg,type){
+  let t=document.getElementById('toastEl');
+  if(!t){t=document.createElement('div');t.id='toastEl';t.className='toast';document.body.appendChild(t);}
+  t.textContent=msg;t.className='toast show '+(type==='success'?'success':'warn');
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.className='toast';},3500);
 }
 
 function switchAuthTab(tab){
@@ -420,6 +432,21 @@ function switchAuthTab(tab){
   document.getElementById('tabRegister').className='tab'+(tab==='register'?' active':'');
 }
 
+function initSupabase(){
+  try{
+    if(typeof supabase!=='undefined'){
+      supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+      supa.auth.getSession().then(({data:{session}})=>{
+        if(session){currentUser=session.user;onUserLoggedIn(currentUser);}
+      });
+      supa.auth.onAuthStateChange((_,session)=>{
+        currentUser=session?.user||null;
+        if(currentUser)onUserLoggedIn(currentUser);else onUserLoggedOut();
+      });
+    }
+  }catch(e){console.error('Supabase init error:',e);}
+}
+
 async function doRegister(){
   const name=document.getElementById('regName').value.trim();
   const email=document.getElementById('regEmail').value.trim().toLowerCase();
@@ -427,19 +454,19 @@ async function doRegister(){
   const errEl=document.getElementById('regErr');
   const btn=document.getElementById('regBtn');
   errEl.style.display='none';
-  if(!name||!email||!pass){errEl.textContent='❌ Sab fields zaruri hain.';errEl.style.display='block';return;}
-  if(pass.length<6){errEl.textContent='❌ Password minimum 6 characters.';errEl.style.display='block';return;}
+  if(!name||!email||!pass){errEl.textContent='Sab fields zaruri hain.';errEl.style.display='block';return;}
+  if(pass.length<6){errEl.textContent='Password minimum 6 characters.';errEl.style.display='block';return;}
   btn.textContent='Creating...';btn.disabled=true;
   try{
     const {data,error}=await supa.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
     if(error)throw error;
     if(data.user){
-      await supa.from('profiles').upsert({id:data.user.id,email,full_name:name,plan:'free',status:'pending',created_at:new Date().toISOString()},{onConflict:'id'}).catch(()=>{});
+      await supa.from('profiles').upsert({id:data.user.id,email,full_name:name,plan:'free',status:'pending'},{onConflict:'id'}).catch(()=>{});
     }
     closeOverlay('authOverlay');
-    showToast('✅ Account created! Ab payment karein.','success');
+    showToast('Account created! Ab payment karein.','success');
     setTimeout(()=>openOverlay('pendingOverlay'),600);
-  }catch(e){errEl.textContent='❌ '+(e.message||'Registration failed');errEl.style.display='block';}
+  }catch(e){errEl.textContent=e.message||'Registration failed';errEl.style.display='block';}
   btn.textContent='Create Account →';btn.disabled=false;
 }
 
@@ -449,16 +476,16 @@ async function doLogin(){
   const errEl=document.getElementById('loginErr');
   const btn=document.getElementById('loginBtn');
   errEl.style.display='none';
-  if(!email||!pass){errEl.textContent='❌ Email aur password dono darj karein.';errEl.style.display='block';return;}
+  if(!email||!pass){errEl.textContent='Email aur password dono darj karein.';errEl.style.display='block';return;}
   btn.textContent='Signing in...';btn.disabled=true;
   try{
     const {data,error}=await supa.auth.signInWithPassword({email,password:pass});
     if(error)throw error;
     closeOverlay('authOverlay');
-    showToast('✅ Login successful!','success');
+    showToast('Login successful!','success');
     checkUserAccess(data.user);
   }catch(e){
-    errEl.textContent='❌ '+(e.message==='Invalid login credentials'?'Email ya password galat hai.':e.message);
+    errEl.textContent=e.message==='Invalid login credentials'?'Email ya password galat hai.':e.message;
     errEl.style.display='block';
   }
   btn.textContent='Sign In →';btn.disabled=false;
@@ -468,13 +495,12 @@ async function doReset(){
   const email=document.getElementById('loginEmail').value.trim();
   if(!email){alert('Pehle email darj karein.');return;}
   await supa.auth.resetPasswordForEmail(email);
-  showToast('📧 Password reset email bhej diya!','success');
+  showToast('Password reset email bhej diya!','success');
 }
 
 async function doLogout(){
   if(supa)await supa.auth.signOut();
-  currentUser=null;currentSession=null;
-  closeOverlay('pendingOverlay');
+  currentUser=null;
   onUserLoggedOut();
   showToast('Signed out.','success');
 }
@@ -485,7 +511,7 @@ async function checkUserAccess(user){
     const {data}=await supa.from('submissions').select('status,plan').eq('email',user.email).eq('status','approved').limit(1);
     if(data&&data.length>0){
       window._approvedPlan=data[0].plan||'Pro';
-      localStorage.setItem('bt_approved_'+user.email, window._approvedPlan);
+      localStorage.setItem('bt_approved_'+user.email,window._approvedPlan);
       goToDashboard();
     } else {
       const {data:prof}=await supa.from('profiles').select('status,plan').eq('email',user.email).limit(1);
@@ -509,7 +535,7 @@ function onUserLoggedIn(user){
   const db=document.getElementById('navDashBtn');
   if(si)si.style.display='none';
   if(gs)gs.style.display='none';
-  if(db){db.style.display='flex';}
+  if(db)db.style.display='flex';
 }
 function onUserLoggedOut(){
   const si=document.getElementById('navSignIn');
@@ -528,7 +554,7 @@ function goToDashboard(){
   window.location.href='dashboard.html';
 }
 
-// ── ADMIN PANEL ──
+// ── ADMIN ──
 function getCreds(){return{user:localStorage.getItem('bt_au')||'admin',pass:localStorage.getItem('bt_ap')||'bloom@2025'};}
 function showAdmin(){
   document.getElementById('adminScreen').style.display='flex';
@@ -545,18 +571,18 @@ function showLanding(){
 function adminLogin(){
   const u=document.getElementById('adminUser').value.trim();
   const p=document.getElementById('adminPass').value;
-  const c=getCreds();
-  if(u===c.user&&p===c.pass){
+  const creds=getCreds();
+  if(u===creds.user&&p===creds.pass){
     document.getElementById('adminLoginWrap').style.display='none';
     document.getElementById('adminDashWrap').style.display='flex';
     document.getElementById('adminWelcome').textContent='Hello, '+u;
     renderAdmin();updateAdminStats();
   } else {
-    const e=document.getElementById('adminErr');e.style.display='block';
-    setTimeout(()=>e.style.display='none',3000);
+    const e=document.getElementById('adminErr');if(e){e.style.display='block';setTimeout(()=>e.style.display='none',3000);}
   }
 }
 function adminLogout(){showLanding();}
+let aFilterVal='all';
 function aFilter(f,btn){
   aFilterVal=f;
   document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
@@ -565,64 +591,63 @@ function aFilter(f,btn){
 async function renderAdmin(){
   const q=(document.getElementById('aSrch')?.value||'').toLowerCase();
   if(supa){
-    let {data:remoteData,error}=await supa.from('submissions').select('*').order('id',{ascending:false});
-    if(!error&&remoteData&&remoteData.length>0){
-      submissions=remoteData.map(s=>({...s,date:s.created_at?s.created_at.slice(0,16):s.date||'—'}));
-    }
+    const {data:rd}=await supa.from('submissions').select('*').order('id',{ascending:false}).catch(()=>({data:null}));
+    if(rd&&rd.length>0)submissions=rd.map(s=>({...s,date:(s.created_at||'').slice(0,16)||'—'}));
   }
-  const filtered=submissions.filter(s=>(aFilterVal==='all'||s.status===aFilterVal)&&(!q||s.name.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)));
+  const filtered=submissions.filter(s=>(aFilterVal==='all'||s.status===aFilterVal)&&(!q||(s.name||'').toLowerCase().includes(q)||(s.email||'').toLowerCase().includes(q)));
   const tbody=document.getElementById('adminTbody');
   const empty=document.getElementById('adminEmpty');
-  const mIcons={jazzcash:'📱',bank:'🏦',crypto:'₿',JazzCash:'📱','Bank Transfer':'🏦',Crypto:'₿',Meezan:'🏦',Easypaisa:'💚',SadaPay:'🟣',easypaisa:'💚',sadapay:'🟣'};
-  if(filtered.length===0){tbody.innerHTML='';empty.style.display='block';return;}
-  empty.style.display='none';
+  if(!tbody)return;
+  if(filtered.length===0){tbody.innerHTML='';if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
   tbody.innerHTML=filtered.map(s=>`<tr>
-    <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--dim)">#${s.id}</td>
-    <td style="font-weight:500">${s.name}</td>
-    <td style="color:var(--dim)">${s.email}</td>
-    <td><span class="badge ${(s.plan||'').toLowerCase()}">${s.plan}</span></td>
-    <td>${mIcons[s.method]||'💳'} ${s.method}</td>
-    <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">${s.amount}</td>
-    <td style="font-size:11px;color:var(--dim);font-family:'Space Mono',monospace">${s.date||'—'}</td>
+    <td style="font-size:10px;color:var(--dim)">#${s.id}</td>
+    <td style="font-weight:500">${s.name||''}</td>
+    <td style="color:var(--dim)">${s.email||''}</td>
+    <td><span class="badge ${(s.plan||'').toLowerCase()}">${s.plan||''}</span></td>
+    <td>${s.method||''}</td>
+    <td style="color:var(--gold)">${s.amount||''}</td>
+    <td style="font-size:11px;color:var(--dim)">${s.date||'—'}</td>
     <td><span class="badge ${s.status}">${(s.status||'').charAt(0).toUpperCase()+(s.status||'').slice(1)}</span></td>
     <td><div class="action-btns">
       <button class="abtn view" onclick="viewSub(${s.id})">View</button>
-      ${s.status!=='approved'?`<button class="abtn approve" onclick="approveUser(${s.id})">✓ Approve</button>`:''}
-      ${s.status!=='rejected'?`<button class="abtn reject" onclick="setStatus(${s.id},'rejected')">✗ Reject</button>`:''}
+      ${s.status!=='approved'?'<button class="abtn approve" onclick="approveUser('+s.id+')">✓ Approve</button>':''}
+      ${s.status!=='rejected'?'<button class="abtn reject" onclick="setStatus('+s.id+",'rejected'"+')">✗ Reject</button>':''}
     </div></td>
   </tr>`).join('');
   updateAdminStats();
 }
 function updateAdminStats(){
-  document.getElementById('aSTotal').textContent=submissions.length;
-  document.getElementById('aSPend').textContent=submissions.filter(s=>s.status==='pending').length;
-  document.getElementById('aSApp').textContent=submissions.filter(s=>s.status==='approved').length;
-  document.getElementById('aSRej').textContent=submissions.filter(s=>s.status==='rejected').length;
+  const el=id=>document.getElementById(id);
+  if(el('aSTotal'))el('aSTotal').textContent=submissions.length;
+  if(el('aSPend'))el('aSPend').textContent=submissions.filter(s=>s.status==='pending').length;
+  if(el('aSApp'))el('aSApp').textContent=submissions.filter(s=>s.status==='approved').length;
+  if(el('aSRej'))el('aSRej').textContent=submissions.filter(s=>s.status==='rejected').length;
 }
 async function approveUser(id){
   const s=submissions.find(x=>x.id===id);if(!s)return;
   s.status='approved';
   if(supa){
-    await supa.from('submissions').update({status:'approved'}).eq('id',id);
+    await supa.from('submissions').update({status:'approved'}).eq('id',id).catch(()=>{});
     if(s.email){
       await supa.from('profiles').update({status:'approved',plan:s.plan||'Pro'}).eq('email',s.email).catch(()=>{});
-      localStorage.setItem('bt_approved_'+s.email, s.plan||'Pro');
+      localStorage.setItem('bt_approved_'+s.email,s.plan||'Pro');
     }
   }
   localStorage.setItem('bt_subs',JSON.stringify(submissions));
-  renderAdmin();
-  showToast('✅ User approved: '+s.email,'success');
+  renderAdmin();showToast('User approved: '+s.email,'success');
 }
 async function setStatus(id,st){
   const s=submissions.find(x=>x.id===id);if(!s)return;
   s.status=st;
-  if(supa)await supa.from('submissions').update({status:st}).eq('id',id);
+  if(supa)await supa.from('submissions').update({status:st}).eq('id',id).catch(()=>{});
   localStorage.setItem('bt_subs',JSON.stringify(submissions));
   renderAdmin();showToast('Status: '+st,'success');
 }
 function viewSub(id){
   const s=submissions.find(x=>x.id===id);if(!s)return;
-  document.getElementById('viewDetails').innerHTML=`
+  const el=document.getElementById('viewDetails');
+  if(el)el.innerHTML=`
     <div class="vdr"><span class="vdl">Name</span><span class="vdv">${s.name}</span></div>
     <div class="vdr"><span class="vdl">Email</span><span class="vdv">${s.email}</span></div>
     <div class="vdr"><span class="vdl">Phone</span><span class="vdv">${s.phone||'—'}</span></div>
@@ -632,67 +657,55 @@ function viewSub(id){
     <div class="vdr"><span class="vdl">Date</span><span class="vdv">${s.date}</span></div>
     <div class="vdr"><span class="vdl">Status</span><span class="vdv"><span class="badge ${s.status}">${s.status}</span></span></div>
     <div style="display:flex;gap:10px;margin-top:16px;">
-      ${s.status!=='approved'?`<button class="abtn approve" style="flex:1;padding:10px;font-size:13px" onclick="approveUser(${s.id});closeVOverlay()">✓ Approve</button>`:''}
-      ${s.status!=='rejected'?`<button class="abtn reject" style="flex:1;padding:10px;font-size:13px" onclick="setStatus(${s.id},'rejected');closeVOverlay()">✗ Reject</button>`:''}
+      ${s.status!=='approved'?'<button class="abtn approve" style="flex:1;padding:10px;font-size:13px" onclick="approveUser('+s.id+');closeVOverlay()">✓ Approve</button>':''}
+      ${s.status!=='rejected'?'<button class="abtn reject" style="flex:1;padding:10px;font-size:13px" onclick="setStatus('+s.id+",'rejected'"+');closeVOverlay()">✗ Reject</button>':''}
     </div>`;
-  document.getElementById('viewOverlay').classList.add('open');
+  const vo=document.getElementById('viewOverlay');if(vo)vo.classList.add('open');
 }
-function closeVOverlay(e){if(!e||e.target===document.getElementById('viewOverlay'))document.getElementById('viewOverlay').classList.remove('open');}
+function closeVOverlay(e){if(!e||e.target===document.getElementById('viewOverlay'))document.getElementById('viewOverlay')?.classList.remove('open');}
 async function addMemberManually(){
-  const email=document.getElementById('manualEmail').value.trim().toLowerCase();
-  const plan=document.getElementById('manualPlan').value;
+  const email=document.getElementById('manualEmail')?.value.trim().toLowerCase();
+  const plan=document.getElementById('manualPlan')?.value;
   const msg=document.getElementById('manualMsg');
-  if(!email){msg.textContent='❌ Email zaruri hai.';msg.style.color='var(--red)';msg.style.display='block';return;}
-  msg.textContent='Adding...';msg.style.color='var(--gold)';msg.style.display='block';
+  if(!email){if(msg){msg.textContent='Email zaruri hai.';msg.style.color='var(--red)';msg.style.display='block';}return;}
+  if(msg){msg.textContent='Adding...';msg.style.color='var(--gold)';msg.style.display='block';}
   try{
     const sub={name:email.split('@')[0],email,phone:'—',plan,method:'Manual',amount:'Manual',status:'approved',created_at:new Date().toISOString()};
     if(supa){
       await supa.from('submissions').upsert(sub,{onConflict:'email'}).catch(()=>{});
-      await supa.from('profiles').upsert({email,full_name:email.split('@')[0],plan,status:'approved'},{onConflict:'email'}).catch(()=>{});
+      await supa.from('profiles').upsert({email,full_name:sub.name,plan,status:'approved'},{onConflict:'email'}).catch(()=>{});
     }
-    localStorage.setItem('bt_approved_'+email, plan);
+    localStorage.setItem('bt_approved_'+email,plan);
     submissions.push({...sub,id:Date.now(),date:new Date().toISOString().slice(0,16)});
-    msg.textContent='✅ Access granted: '+email;msg.style.color='var(--green)';
-    document.getElementById('manualEmail').value='';
+    if(msg){msg.textContent='Access granted: '+email;msg.style.color='var(--green)';}
+    if(document.getElementById('manualEmail'))document.getElementById('manualEmail').value='';
     renderAdmin();
-  }catch(e){msg.textContent='❌ Error: '+(e.message||'Failed');msg.style.color='var(--red)';}
-  setTimeout(()=>msg.style.display='none',4000);
+  }catch(e){if(msg){msg.textContent='Error: '+(e.message||'Failed');msg.style.color='var(--red)';}}
+  setTimeout(()=>{if(msg)msg.style.display='none';},4000);
 }
 function saveCreds(){
-  const u=document.getElementById('newUser').value.trim();
-  const p=document.getElementById('newPass').value;
-  const cf=document.getElementById('cfPass').value;
+  const u=document.getElementById('newUser')?.value.trim();
+  const p=document.getElementById('newPass')?.value;
+  const cf=document.getElementById('cfPass')?.value;
   const msg=document.getElementById('setMsg');
-  if(!u||!p){msg.textContent='❌ Fields required.';msg.style.color='var(--red)';msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);return;}
-  if(p!==cf){msg.textContent='❌ Passwords do not match.';msg.style.color='var(--red)';msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);return;}
+  if(!u||!p){if(msg){msg.textContent='Fields required.';msg.style.color='var(--red)';msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);}return;}
+  if(p!==cf){if(msg){msg.textContent='Passwords do not match.';msg.style.color='var(--red)';msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);}return;}
   localStorage.setItem('bt_au',u);localStorage.setItem('bt_ap',p);
-  msg.textContent='✓ Updated!';msg.style.color='var(--green)';msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);
-  document.getElementById('newUser').value='';document.getElementById('newPass').value='';document.getElementById('cfPass').value='';
+  if(msg){msg.textContent='Updated!';msg.style.color='var(--green)';msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);}
 }
 
-// ── UTILITY FUNCTIONS ──
-let submissions=[]; try{submissions=JSON.parse(localStorage.getItem('bt_subs')||'[]');}catch(e){}
-let aFilterVal='all';
-function openOverlay(id){const el=document.getElementById(id);if(el)el.classList.add('open');}
-function closeOverlay(id){const el=document.getElementById(id);if(el)el.classList.remove('open');}
-function closeBg(e,id){if(e.target===e.currentTarget)closeOverlay(id);}
-function showToast(msg,type='success'){
-  let t=document.getElementById('siteToast');
-  if(!t){t=document.createElement('div');t.id='siteToast';t.className='toast';document.body.appendChild(t);}
-  t.textContent=msg;t.className='toast show '+(type==='success'?'success':'warn');
-  clearTimeout(t._t);t._t=setTimeout(()=>{t.className='toast';},3500);
-}
+// ── PAY MODAL ──
 let _curPlan='Pro',_curLabel='$200 / PKR 55,600',_curUsd=200,_curPkr=55600;
 function openPayModal(plan,label,usd,pkr){
   _curPlan=plan;_curLabel=label;_curUsd=usd;_curPkr=pkr;
-  const el=document.getElementById('payPillLabel');if(el)el.textContent=plan+' — '+label;
+  const pl=document.getElementById('payPillLabel');if(pl)pl.textContent=plan+' — '+label;
   document.querySelectorAll('.pay-box').forEach(b=>b.classList.remove('vis'));
   document.querySelectorAll('.pm-btn').forEach(b=>b.classList.remove('sel'));
   const pn=document.getElementById('payNotice');if(pn)pn.style.display='none';
   const pr=document.getElementById('payReceiptSec');if(pr)pr.style.display='none';
   const ps=document.getElementById('paySuccess');if(ps)ps.classList.remove('vis');
   const p1=document.getElementById('payStep1');if(p1)p1.style.display='block';
-  document.getElementById('cryptoAmt').innerHTML='$'+usd+'.00<button class="cbtn" onclick="cp(''+usd+'',this)">Copy</button>';
+  const ca=document.getElementById('cryptoAmt');if(ca)ca.innerHTML='$'+usd+'.00<button class="cbtn" onclick="cp(''+usd+'',this)">Copy</button>';
   ['jazzAmt','epAmt','spAmt','bankAmt'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML='PKR '+pkr.toLocaleString()+'<button class="cbtn" onclick="cp(''+pkr+'',this)">Copy</button>';});
   openOverlay('payOverlay');
 }
@@ -720,14 +733,16 @@ async function submitPay(){
   const phone=document.getElementById('payerPhone')?.value.trim()||'—';
   if(!name||!email){showToast('Name aur email zaruri hain.','warn');return;}
   const method=document.querySelector('.pm-btn.sel .pm-name')?.textContent||'—';
-  const sub={name,email,phone,plan:_curPlan,method,amount:'$'+_curUsd+' / PKR '+_curPkr,status:'pending',date:new Date().toISOString().slice(0,16),id:Date.now()};
+  const sub={name,email,phone,plan:_curPlan,method,amount:'$'+_curUsd+' / PKR '+_curPkr.toLocaleString(),status:'pending',date:new Date().toISOString().slice(0,16),id:Date.now()};
   submissions.push(sub);
   localStorage.setItem('bt_subs',JSON.stringify(submissions));
-  if(supa){await supa.from('submissions').insert([{name,email,phone,plan:_curPlan,method,amount:sub.amount,status:'pending'}]).catch(()=>{});}
-  document.getElementById('payStep1').style.display='none';
-  document.getElementById('paySuccess').classList.add('vis');
-  showToast('✅ Receipt submitted!','success');
+  if(supa)await supa.from('submissions').insert([{name,email,phone,plan:_curPlan,method,amount:sub.amount,status:'pending'}]).catch(()=>{});
+  const p1=document.getElementById('payStep1');if(p1)p1.style.display='none';
+  const ps=document.getElementById('paySuccess');if(ps)ps.classList.add('vis');
+  showToast('Receipt submitted!','success');
 }
+
+// ── TICKER + CHART ──
 function initTicker(){
   const pairs=[['BTC',94200,1.2],['ETH',3280,-0.8],['SOL',185,2.1],['BNB',620,0.5],['XRP',0.62,-1.3],['DOGE',0.18,3.4],['ADA',0.72,1.8],['AVAX',22,-0.6]];
   const track=document.getElementById('tickerTrack');
@@ -740,29 +755,31 @@ function initLandingChart(){
   const heights=[40,65,45,80,60,90,55,75,50,85,70,95,60,88,72];
   bars.forEach((b,i)=>{setTimeout(()=>{b.style.height=(heights[i%heights.length])+'%';},i*60);});
 }
-// Smooth scroll
-document.querySelectorAll("a[href^='#']").forEach(a=>{
-  a.addEventListener("click",e=>{
-    const t=document.querySelector(a.getAttribute("href"));
-    if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth"});}
-  });
-});
-window.addEventListener("load", function(){
+
+// ── SUBMISSIONS STORE ──
+let submissions=[];
+try{submissions=JSON.parse(localStorage.getItem('bt_subs')||'[]');}catch(e){}
+
+// ── INIT ──
+window.addEventListener('load',function(){
   initSupabase();
   initTicker();
   initLandingChart();
-});
-window.addEventListener("load",function(){
-  initSupabase();
-  initTicker();
-  initLandingChart();
-  // Admin secret: visit #adminportal2025
+  // Admin secret URL
   if(window.location.hash==='#adminportal2025') setTimeout(()=>showAdmin(),400);
-  // Auto pending if from dashboard
+  // Pending redirect
   if(window.location.search.includes('pending=1')) setTimeout(()=>openOverlay('pendingOverlay'),500);
-  // Check existing session
+  // Restore session
   const sess=localStorage.getItem('bt_session');
   if(sess){try{const s=JSON.parse(sess);if(s.email&&(Date.now()-s.ts)<30*24*60*60*1000)onUserLoggedIn({email:s.email});}catch(e){}}
+});
+
+// Smooth scroll
+document.querySelectorAll("a[href^='#']").forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
 });
 </script>
 </body>
