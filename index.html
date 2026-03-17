@@ -181,8 +181,8 @@
     <div class="plan featured">
       <div class="plan-badge">Most Popular</div>
       <div class="plan-name" style="color:var(--gold)">Pro</div>
-      <div class="plan-price" style="color:var(--gold)"><span>$</span>200</div>
-      <div class="plan-period">per month · ~PKR 55,600</div>
+      <div class="plan-price" style="color:var(--gold)"><span>$</span>100</div>
+      <div class="plan-period">per month · ~PKR 27,800</div>
       <div class="plan-div"></div>
       <ul class="plan-feats">
         <li><span class="ck">✓</span> Unlimited trading pairs</li>
@@ -192,12 +192,12 @@
         <li><span class="ck">✓</span> Liquidation heatmap</li>
         <li><span class="ck">✓</span> Dynamic Island alerts</li>
       </ul>
-      <button class="plan-btn solid" onclick="openPayModal('Pro','$200 / PKR 55,600',200,55600)">Subscribe — Pro</button>
+      <button class="plan-btn solid" onclick="openPayModal('Pro','$100 / PKR 27,800',100,27800)">Subscribe — Pro</button>
     </div>
     <div class="plan">
       <div class="plan-name">Elite</div>
-      <div class="plan-price"><span>$</span>100</div>
-      <div class="plan-period">per month · ~PKR 27,800</div>
+      <div class="plan-price"><span>$</span>200</div>
+      <div class="plan-period">per month · ~PKR 55,600</div>
       <div class="plan-div"></div>
       <ul class="plan-feats">
         <li><span class="ck">✓</span> Everything in Pro</li>
@@ -207,7 +207,7 @@
         <li><span class="ck">✓</span> Priority support</li>
         <li><span class="ck">✓</span> Custom alert webhooks</li>
       </ul>
-      <button class="plan-btn outline" onclick="openPayModal('Elite','$100 / PKR 27,800',100,27800)">Subscribe — Elite</button>
+      <button class="plan-btn outline" onclick="openPayModal('Elite','$200 / PKR 55,600',200,55600)">Subscribe — Elite</button>
     </div>
   </div>
 </section>
@@ -273,7 +273,7 @@
     <button class="modal-x" onclick="closeOverlay('payOverlay')">✕</button>
     <h3>Complete Payment</h3>
     <div class="modal-sub">Choose your preferred method</div>
-    <div class="pay-pill" id="payPillLabel">Pro — $29 / PKR 8,100</div>
+    <div class="pay-pill" id="payPillLabel">Pro — $100 / PKR 27,800</div>
 
     <div id="payStep1">
       <div style="font-size:10px;color:var(--dim);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;">Select Method</div>
@@ -295,26 +295,26 @@
         <div style="font-size:10px;color:var(--dim);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;">JazzCash Payment</div>
         <div class="pdr"><span class="pdl">Number</span><span class="pdv">03186350426<button class="cbtn" onclick="cp('03186350426',this)">Copy</button></span></div>
         <div class="pdr"><span class="pdl">Account Name</span><span class="pdv">Hassan Raza</span></div>
-        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="jazzAmt">PKR 8,100<button class="cbtn" onclick="cp('8100',this)">Copy</button></span></div>
+        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="jazzAmt">PKR 27,800<button class="cbtn" onclick="cp('27800',this)">Copy</button></span></div>
       </div>
 <div class="pay-box" id="box-easypaisa">
         <div style="font-size:10px;color:var(--dim);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;">Easypaisa Payment</div>
         <div class="pdr"><span class="pdl">Number</span><span class="pdv">03186350426<button class="cbtn" onclick="cp('03186350426',this)">Copy</button></span></div>
         <div class="pdr"><span class="pdl">Account Name</span><span class="pdv">Hassan Raza</span></div>
-        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="epAmt">PKR 8,100<button class="cbtn" onclick="cp('8100',this)">Copy</button></span></div>
+        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="epAmt">PKR 27,800<button class="cbtn" onclick="cp('27800',this)">Copy</button></span></div>
       </div>
 <div class="pay-box" id="box-sadapay">
         <div style="font-size:10px;color:var(--dim);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;">SadaPay Payment</div>
         <div class="pdr"><span class="pdl">Number</span><span class="pdv">03186350426<button class="cbtn" onclick="cp('03186350426',this)">Copy</button></span></div>
         <div class="pdr"><span class="pdl">Account Name</span><span class="pdv">Hassan Raza</span></div>
-        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="spAmt">PKR 8,100<button class="cbtn" onclick="cp('8100',this)">Copy</button></span></div>
+        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="spAmt">PKR 27,800<button class="cbtn" onclick="cp('27800',this)">Copy</button></span></div>
       </div>
 <div class="pay-box" id="box-bank">
         <div style="font-size:10px;color:var(--dim);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;">Bank Transfer — Meezan Bank</div>
         <div class="pdr"><span class="pdl">Bank</span><span class="pdv">Meezan Bank</span></div>
         <div class="pdr"><span class="pdl">Account Title</span><span class="pdv">Hassan Raza</span></div>
         <div class="pdr"><span class="pdl">IBAN</span><span class="pdv" style="font-size:10px;">PK66MEZN0000300112991020<button class="cbtn" onclick="cp('PK66MEZN0000300112991020',this)">Copy</button></span></div>
-        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="bankAmt">PKR 8,100<button class="cbtn" onclick="cp('8100',this)">Copy</button></span></div>
+        <div class="pdr"><span class="pdl">Amount (PKR)</span><span class="pdv" id="bankAmt">PKR 27,800<button class="cbtn" onclick="cp('27800',this)">Copy</button></span></div>
       </div>
 
       <div class="pay-notice" id="payNotice">⚠️ Payment ke baad receipt upload karein. Account <strong>1-2 hours</strong> mein activate hoga.</div>
@@ -695,7 +695,7 @@ function saveCreds(){
 }
 
 // ── PAY MODAL ──
-let _curPlan='Pro',_curLabel='$200 / PKR 55,600',_curUsd=200,_curPkr=55600;
+let _curPlan='Pro',_curLabel='$100 / PKR 27,800',_curUsd=100,_curPkr=27800;
 function openPayModal(plan,label,usd,pkr){
   _curPlan=plan;_curLabel=label;_curUsd=usd;_curPkr=pkr;
   const pl=document.getElementById('payPillLabel');if(pl)pl.textContent=plan+' — '+label;
